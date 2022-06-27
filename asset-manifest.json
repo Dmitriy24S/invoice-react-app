@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/invoice-react-app/static/css/main.a47cd383.css",
+    "main.js": "/invoice-react-app/static/js/main.dc1eb3b2.js",
+    "static/js/787.4ddb21c7.chunk.js": "/invoice-react-app/static/js/787.4ddb21c7.chunk.js",
+    "static/media/icon-sun.svg": "/invoice-react-app/static/media/icon-sun.f3da52d13a35ad8bc751df2e85093f98.svg",
+    "index.html": "/invoice-react-app/index.html",
+    "static/media/icon-moon.svg": "/invoice-react-app/static/media/icon-moon.7101c57dc8ecc85e045e9179625e2cb2.svg",
+    "static/media/logo.svg": "/invoice-react-app/static/media/logo.e8c9e71e5f292af8e66b49e99439f7b7.svg",
+    "static/media/icon-plus.svg": "/invoice-react-app/static/media/icon-plus.278c048a38de266d0e5bdbb8bcaaf395.svg",
+    "main.a47cd383.css.map": "/invoice-react-app/static/css/main.a47cd383.css.map",
+    "main.dc1eb3b2.js.map": "/invoice-react-app/static/js/main.dc1eb3b2.js.map",
+    "787.4ddb21c7.chunk.js.map": "/invoice-react-app/static/js/787.4ddb21c7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a47cd383.css",
+    "static/js/main.dc1eb3b2.js"
+  ]
+}
