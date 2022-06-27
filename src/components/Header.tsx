@@ -9,8 +9,8 @@ const Header = ({ darkTheme, setDarkTheme }: any) => {
   };
   return (
     // bg-[#1e2139] - header bg?
-    <header className="bg-indigo-900 flex justify-between">
-      <div className="logo-container w-14 h-16 rounded-r-2xl overflow-hidden bg-violet-500  flex justify-center items-center relative after:h-3/6 after:bg-white after:opacity-20 after:w-full after:absolute after:bottom-0 after:rounded-tl-2xl">
+    <header className="bg-indigo-900 bg-opacity-40 flex justify-between">
+      <div className="logo-container w-16 h-16 rounded-r-2xl overflow-hidden bg-violet-500  flex justify-center items-center relative after:h-3/6 after:bg-white after:opacity-20 after:w-full after:absolute after:bottom-0 after:rounded-tl-2xl">
         <Logo className="z-10" />
       </div>
       <div className="flex items-center">
