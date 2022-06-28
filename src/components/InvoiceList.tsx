@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import React from "react";
 import data from "../data/data.json";
 import { ReactComponent as PlusIcon } from "../images/icon-plus.svg";
@@ -57,7 +58,10 @@ const InvoiceList = () => {
       </div>
       <div className="list flex flex-col gap-5 justify-center items-center mt-8">
         {data.map((item) => (
-          <div className="item min-w-[18rem] w-full max-w-[20rem] bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg">
+          <div
+            className="item min-w-[18rem] w-full max-w-[20rem] bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg"
+            key={item.id}
+          >
             <div className="item-title flex justify-between">
               <p className="font-bold">
                 <span className="text-indigo-400">#</span>
@@ -67,7 +71,9 @@ const InvoiceList = () => {
             </div>
             <div className="item-info flex justify-between items-center mt-3">
               <div className="item-payment-total">
-                <p className="opacity-90 text-sm">{item.paymentDue}</p>
+                <p className="opacity-90 text-sm">
+                  Due {dayjs(item.paymentDue).format("DD MMM YYYY")}
+                </p>
                 <p className="font-bold mt-1">
                   ${" "}
                   {item.total.toLocaleString("en-US", {
