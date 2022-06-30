@@ -125,7 +125,7 @@ const InvoiceList = () => {
               </button>
               {/* Dropdown */}
               {isDropdownOpen && (
-                <div className="dropdown absolute top-12 min-w-[10rem] bg-indigo-900 bg-opacity-40 flex flex-col gap-2 p-4 left-1/2 -translate-x-2/4 rounded-lg">
+                <div className="dropdown absolute top-12 min-w-[10rem] bg-[rgb(29,35,74)] flex flex-col gap-2 p-4 left-1/2 -translate-x-2/4 rounded-lg z-50 shadow-lg">
                   {invoiceListFilterOptions.map((filterOption) => (
                     <label
                       htmlFor={filterOption.name}
