@@ -40,7 +40,7 @@ const Header = ({ darkTheme, setDarkTheme }: any) => {
           </button>
           {/* #494e6e - border bg? */}
           <button
-            className="avatar-container pl-4 border-l border-[#716da8] h-full flex items-center justify-center pr-6 cursor-pointer"
+            className="avatar-container pl-4 pr-6 border-l border-[#716da8] h-full flex items-center justify-centercursor-pointer"
             aria-label="open profile"
           >
             <Image
@@ -48,6 +48,7 @@ const Header = ({ darkTheme, setDarkTheme }: any) => {
               alt="avatar"
               width={32}
               height={32}
+              className="rounded-full"
             />
           </button>
         </div>
