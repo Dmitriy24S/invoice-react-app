@@ -1,13 +1,9 @@
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from "react";
-import Header from "../components/Header.tsx";
 import InvoiceList from "../components/InvoiceList.tsx";
 // import styles from "../styles/Home.module.css";
 
-export default function Home() {
-  const [darkTheme, setDarkTheme] = useState(true);
-
+export default function Home({ invoices }) {
   return (
     <>
       <Head>
@@ -18,10 +14,8 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {/* <main className={styles.main}> */}
       <main>
-        <Header darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
-        <InvoiceList />
+        <InvoiceList invoices={invoices} />
       </main>
     </>
   );

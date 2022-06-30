@@ -2,7 +2,6 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import data from "../data/data.json";
 
 const PaidStatus = ({ status }: any) => {
   // html circle/dot: &#x2022;
@@ -39,8 +38,7 @@ const DraftStatus = ({ status }: any) => {
   );
 };
 
-const InvoiceList = () => {
-  const [invoices, setInvoices] = useState(data);
+const InvoiceList = ({ invoices }: any) => {
   const [filteredInvoices, setFilteredInvoices] = useState<any>(null);
   const [selectedFilter, setSelectedFilter] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -96,17 +94,13 @@ const InvoiceList = () => {
     }
   }, [selectedFilter, invoices]);
 
-  //   const handleClickInvoiceForDetails = () => {
-  //     return <InvoiceInfo />;
-  //   };
-
   return (
     <section className="mt-8 px-4">
       <div className="list-header">
         <div className="list-header-content max-w-5xl mx-auto flex justify-between">
           <div className="list-header-left">
             <h2 className="text-2xl font-bold">Invoices</h2>
-            <p className="opacity-80 mt-1">{data.length} invoices</p>
+            <p className="opacity-80 mt-1">{invoices?.length} invoices</p>
           </div>
           <div className="list-header-right flex items-center gap-5">
             <div className="dropdown-container relative" ref={dropdown}>
@@ -160,7 +154,6 @@ const InvoiceList = () => {
               href={`/invoice/${item.id}`}
               passHref={true}
               scroll={false}
-              //   className="item min-w-[18rem] w-full max-w-[20rem] bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg"
               key={item.id}
             >
               <article className="item min-w-[18rem] w-full max-w-[20rem] bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer">
