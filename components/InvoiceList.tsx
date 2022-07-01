@@ -156,37 +156,39 @@ const InvoiceList = ({ invoices }: any) => {
               scroll={false}
               key={item.id}
             >
-              <article className="item min-w-[18rem] w-full max-w-[20rem] bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer">
-                <div className="item-title flex justify-between">
-                  <p className="font-bold">
-                    <span className="text-indigo-400">#</span>
-                    {item.id}
-                  </p>
-                  <p className="opacity-90">{item.clientName}</p>
-                </div>
-                <div className="item-info flex justify-between items-center mt-3">
-                  <div className="item-payment-total">
-                    <p className="opacity-90 text-sm">
-                      Due {dayjs(item.paymentDue).format("DD MMM YYYY")}
+              <a>
+                <article className="item min-w-[18rem] w-full max-w-[20rem] bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer">
+                  <div className="item-title flex justify-between">
+                    <p className="font-bold">
+                      <span className="text-indigo-400">#</span>
+                      {item.id}
                     </p>
-                    <p className="font-bold mt-1">
-                      ${" "}
-                      {item.total.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </p>
+                    <p className="opacity-90">{item.clientName}</p>
                   </div>
-                  <div className="item-payment-status">
-                    {item.status === "paid" ? (
-                      <PaidStatus status={item.status} />
-                    ) : item.status === "pending" ? (
-                      <PendingStatus status={item.status} />
-                    ) : (
-                      <DraftStatus status={item.status} />
-                    )}
+                  <div className="item-info flex justify-between items-center mt-3">
+                    <div className="item-payment-total">
+                      <p className="opacity-90 text-sm">
+                        Due {dayjs(item.paymentDue).format("DD MMM YYYY")}
+                      </p>
+                      <p className="font-bold mt-1">
+                        ${" "}
+                        {item.total.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </p>
+                    </div>
+                    <div className="item-payment-status">
+                      {item.status === "paid" ? (
+                        <PaidStatus status={item.status} />
+                      ) : item.status === "pending" ? (
+                        <PendingStatus status={item.status} />
+                      ) : (
+                        <DraftStatus status={item.status} />
+                      )}
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </a>
             </Link>
           ))}
         </div>
