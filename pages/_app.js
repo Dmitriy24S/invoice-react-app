@@ -8,7 +8,7 @@ function MyApp({ Component, pageProps }) {
   const [invoices, setInvoices] = useState(data);
 
   return (
-    <div className="main-wrapper max-w-5xl mx-auto">
+    <div className="main-wrapper max-w-5xl mx-auto mb-10">
       <Header darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
       <Component {...pageProps} invoices={invoices} />
     </div>
