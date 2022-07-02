@@ -54,10 +54,10 @@ export default function Invoice({ invoices }) {
   return (
     <main className="mt-8 px-4">
       <Link href="/" passHref={true} scroll={false}>
-        <a>
+        <a className="block w-fit group">
           <span className="flex gap-2 items-center cursor-pointer">
             <img src="/images/icon-arrow-left.svg" alt="" />
-            Go Back
+            <span className="group-hover:opacity-80">Go Back</span>
           </span>
         </a>
       </Link>
