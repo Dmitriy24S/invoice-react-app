@@ -117,7 +117,7 @@ export default function Invoice({ invoices }) {
               {invoiceInfo?.items.map((item) => (
                 <div className="invoice-item flex justify-between items-center">
                   <p>{item.name}</p>
-                  <p>$ {item.price}</p>
+                  <p>$ {item.price * item.quantity}</p>
                 </div>
               ))}
             </div>
