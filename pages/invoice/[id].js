@@ -52,7 +52,8 @@ export default function Invoice({ invoices }) {
   console.log(invoiceInfo);
 
   return (
-    <main className="mt-8 px-4">
+    <main className="mt-8 px-4 max-w-3xl mx-auto">
+      {/* Back button */}
       <Link href="/" passHref={true} scroll={false}>
         <a className="block w-fit group">
           <span className="flex gap-2 items-center cursor-pointer">
@@ -61,8 +62,9 @@ export default function Invoice({ invoices }) {
           </span>
         </a>
       </Link>
-      <section className="invoice min-w-[18rem] w-full max-w-[20rem] mt-6 mx-auto flex flex-col gap-5">
-        <div className="payment-status-container flex items-center justify-between bg-indigo-900 bg-opacity-40 p-4  rounded-lg">
+      {/* Invoice */}
+      <section className="invoice min-w-[18rem] w-full mx-auto mt-6 flex flex-col gap-5 max-w-3xl">
+        <div className="payment-status-container flex items-center justify-between bg-indigo-900 bg-opacity-40 p-4  rounded-lg sm:p-6">
           <h4>Status</h4>
           <p className="invoice-payment-status">
             {invoiceInfo?.status === "paid" ? (
@@ -74,7 +76,7 @@ export default function Invoice({ invoices }) {
             )}
           </p>
         </div>
-        <div className="invoice-info grid grid-cols-2 gap-4 flex-col bg-indigo-900 bg-opacity-40 p-5 rounded-lg">
+        <div className="invoice-info grid grid-cols-2 gap-4 flex-col bg-indigo-900 bg-opacity-40 p-5 sm:p-6 rounded-lg">
           <div className="invoice-id col-span-2">
             <p className="font-bold">
               <span className="text-indigo-400">#</span>
@@ -82,7 +84,7 @@ export default function Invoice({ invoices }) {
             </p>
             <p className="text-slate-300">{invoiceInfo?.description}</p>
           </div>
-          <address className="sender-adress not-italic col-span-2 text-slate-300">
+          <address className="sender-address not-italic col-span-2 text-slate-300">
             <p>{invoiceInfo?.senderAddress.street}</p>
             <p>{invoiceInfo?.senderAddress.city}</p>
             <p>{invoiceInfo?.senderAddress.postCode}</p>
@@ -101,7 +103,7 @@ export default function Invoice({ invoices }) {
           <div className="client-info flex flex-col">
             <p className="text-slate-300">Bill to</p>
             <p>{invoiceInfo?.clientName}</p>
-            <address className="not-italic text-slate-300 mt-4">
+            <address className="client-address not-italic text-slate-300 mt-4">
               <p> {invoiceInfo?.clientAddress.street} </p>
               <p> {invoiceInfo?.clientAddress.city} </p>
               <p> {invoiceInfo?.clientAddress.postCode} </p>
@@ -112,12 +114,12 @@ export default function Invoice({ invoices }) {
             <p>Sent to</p>
             <p className="text-slate-300">{invoiceInfo?.clientEmail}</p>
           </div>
-          <div className="price-container mt-4 col-span-2 rounded-lg overflow-hidden shadow-[0_0_40px_0_rgba(0,0,0,0.3)]">
+          <div className="price-container mt-8 col-span-2 rounded-lg overflow-hidden shadow-[0_0_40px_0_rgba(0,0,0,0.3)]">
             <div className="invoice-items p-6 flex flex-col gap-2 text-sm">
               {invoiceInfo?.items.map((item) => (
                 <div className="invoice-item flex justify-between items-center">
-                  <p>{item.name}</p>
-                  <p>$ {item.price * item.quantity}</p>
+                  <p className="item-name">{item.name}</p>
+                  <p className="item-total">$ {item.price * item.quantity}</p>
                 </div>
               ))}
             </div>

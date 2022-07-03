@@ -96,7 +96,7 @@ const InvoiceList = ({ invoices }: any) => {
 
   return (
     <section className="mt-8 px-4">
-      <div className="list-header">
+      <div className="list max-w-3xl mx-auto">
         <div className="list-header-content max-w-5xl mx-auto flex justify-between">
           <div className="list-header-left">
             <h2 className="text-2xl font-bold">Invoices</h2>
@@ -147,7 +147,7 @@ const InvoiceList = ({ invoices }: any) => {
             </button>
           </div>
         </div>
-        <div className="list flex flex-col gap-5 justify-center items-center mt-8">
+        <div className="list flex flex-col gap-5 justify-center items-center mt-8 md:items-stretch">
           {filteredInvoices?.map((item: any) => (
             // Invoice preview
             <Link
@@ -156,36 +156,32 @@ const InvoiceList = ({ invoices }: any) => {
               scroll={false}
               key={item.id}
             >
-              <a>
-                <article className="item min-w-[18rem] w-full max-w-[20rem] bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer">
-                  <div className="item-title flex justify-between">
-                    <p className="font-bold">
-                      <span className="text-indigo-400">#</span>
-                      {item.id}
-                    </p>
-                    <p className="opacity-90">{item.clientName}</p>
-                  </div>
-                  <div className="item-info flex justify-between items-center mt-3">
-                    <div className="item-payment-total">
-                      <p className="opacity-90 text-sm">
-                        Due {dayjs(item.paymentDue).format("DD MMM YYYY")}
-                      </p>
-                      <p className="font-bold mt-1">
-                        ${" "}
-                        {item.total.toLocaleString("en-US", {
-                          minimumFractionDigits: 2,
-                        })}
-                      </p>
-                    </div>
-                    <div className="item-payment-status">
-                      {item.status === "paid" ? (
-                        <PaidStatus status={item.status} />
-                      ) : item.status === "pending" ? (
-                        <PendingStatus status={item.status} />
-                      ) : (
-                        <DraftStatus status={item.status} />
-                      )}
-                    </div>
+              <a className="w-full mx-auto">
+                <article className="item min-w-[18rem] w-full mx-auto max-w-[30rem] bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer grid grid-cols-2 items-end md:max-w-full md:w-full md:flex md:items-center md:gap-6 md:py-5">
+                  <p className="item-id font-bold inline-block md:order-1">
+                    <span className="text-indigo-400">#</span>
+                    {item.id}
+                  </p>
+                  <p className="item-clientname opacity-90 inline-block ml-auto md:ml-0 md:order-3">
+                    {item.clientName}
+                  </p>
+                  <p className="item-due opacity-90 text-sm mt-4 md:mt-0 md:order-2">
+                    Due {dayjs(item.paymentDue).format("DD MMM YYYY")}
+                  </p>
+                  <p className="item-total font-bold col-start-1 row-start-3 md:order-4 md:ml-auto">
+                    ${" "}
+                    {item.total.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </p>
+                  <div className="item-payment-status ml-auto col-start-2 row-start-2 row-end-4 mt-2 md:order-5 md:mt-0 md:ml-0">
+                    {item.status === "paid" ? (
+                      <PaidStatus status={item.status} />
+                    ) : item.status === "pending" ? (
+                      <PendingStatus status={item.status} />
+                    ) : (
+                      <DraftStatus status={item.status} />
+                    )}
                   </div>
                 </article>
               </a>
