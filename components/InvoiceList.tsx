@@ -99,10 +99,12 @@ const InvoiceList = ({ invoices }: any) => {
       <div className="list max-w-3xl mx-auto">
         <div className="list-header-content max-w-5xl mx-auto flex justify-between">
           <div className="list-header-left">
-            <h2 className="text-2xl font-bold">Invoices</h2>
-            <p className="opacity-80 mt-1">{invoices?.length} invoices</p>
+            <h2 className="text-xl sm:text-2xl font-bold">Invoices</h2>
+            <p className="text-sm sm:text-base opacity-80 mt-1">
+              {invoices?.length} invoices
+            </p>
           </div>
-          <div className="list-header-right flex items-center gap-5">
+          <div className="list-header-right flex items-center gap-2 sm:gap-5">
             <div className="dropdown-container relative" ref={dropdown}>
               <button
                 className="font-bold flex gap-2 items-center"
@@ -139,11 +141,12 @@ const InvoiceList = ({ invoices }: any) => {
                 </div>
               )}
             </div>
-            <button className="new-invoice-btn flex gap-2 sitems-center bg-violet-500 px-4 py-2.5 rounded-full font-bold">
-              <div className="plus-icon-container bg-white rounded-full w-6 h-6 flex items-center justify-center">
+            <button className="new-invoice-btn flex sitems-center bg-violet-500 px-4 py-2.5 rounded-full font-semibold hover:bg-[#9c71fd] transition-colors">
+              <div className="plus-icon-container bg-white rounded-full w-6 h-6 flex items-center justify-center mr-2">
                 <Image src="/images/icon-plus.svg" width={11} height={11} />
               </div>
               New
+              <span className="hidden sm:inline-block sm:ml-1">{` invoice`}</span>
             </button>
           </div>
         </div>
@@ -156,8 +159,8 @@ const InvoiceList = ({ invoices }: any) => {
               scroll={false}
               key={item.id}
             >
-              <a className="w-full mx-auto">
-                <article className="item min-w-[18rem] w-full mx-auto max-w-[30rem] bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer grid grid-cols-2 items-end md:max-w-full md:w-full md:flex md:items-center md:gap-6 md:py-5">
+              <a className=" min-w-[18rem] w-full max-w-[30rem] mx-auto md:max-w-full md:w-full">
+                <article className="item bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer grid grid-cols-2 items-end  md:flex md:items-center md:gap-6 md:py-5">
                   <p className="item-id font-bold inline-block md:order-1">
                     <span className="text-indigo-400">#</span>
                     {item.id}
