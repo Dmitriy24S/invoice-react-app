@@ -1,3 +1,4 @@
+import { ThemeProvider } from "next-themes";
 import { useState } from "react";
 import Header from "../components/Header.tsx";
 import data from "../data/data.json";
@@ -8,10 +9,12 @@ function MyApp({ Component, pageProps }) {
   const [invoices, setInvoices] = useState(data);
 
   return (
-    <div className="main-wrapper mb-10">
-      <Header darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
-      <Component {...pageProps} invoices={invoices} />
-    </div>
+    <ThemeProvider attribute="class">
+      <div className="main-wrapper mb-10">
+        <Header darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
+        <Component {...pageProps} invoices={invoices} />
+      </div>
+    </ThemeProvider>
   );
 }
 

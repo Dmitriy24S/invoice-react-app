@@ -10,8 +10,8 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   /* scrollbar-gutter: stable; */
   /* dark theme */
-  color: white;
-  background-color: hsl(233, 30%, 11%);
+  /* color: white; */
+  /* background-color: hsl(233, 30%, 11%); */
 }
 
 a {
@@ -25,4 +25,14 @@ a {
 
 .main-wrapper {
   /* scrollbar-gutter: stable; */
+}
+
+/* Light / Dark Theme */
+.dark {
+  color: white;
+  background-color: hsl(233, 30%, 11%);
+}
+.light {
+  color: rgb(43, 43, 43);
+  background-color: hsl(0deg 0% 97%);
 }

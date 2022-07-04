@@ -29,9 +29,9 @@ const DraftStatus = ({ status }: any) => {
   return (
     // light theme #373b53
     // dark theme #dfe3fa
-    <div className="bg-[#dfe3fa] bg-opacity-10 rounded-lg w-[7rem] capitalize text-center">
-      <p className="px-2 py-2.5 text-[#dfe3fa] font-bold">
-        <span className="circle h-2.5 w-2.5 bg-[#dfe3fa] inline-block rounded-full mr-2"></span>
+    <div className=" bg-[#373b53] dark:bg-[#dfe3fa] bg-opacity-10 dark:bg-opacity-10 rounded-lg w-[7rem] capitalize text-center">
+      <p className="px-2 py-2.5 text-[#373b53] dark:text-[#dfe3fa] font-bold">
+        <span className="circle h-2.5 w-2.5  bg-[#373b53] dark:bg-[#dfe3fa] inline-block rounded-full mr-2"></span>
         {status}
       </p>
     </div>
@@ -121,7 +121,7 @@ const InvoiceList = ({ invoices }: any) => {
               </button>
               {/* Dropdown */}
               {isDropdownOpen && (
-                <div className="dropdown absolute top-12 min-w-[10rem] bg-[rgb(29,35,74)] flex flex-col gap-2 p-4 left-1/2 -translate-x-2/4 rounded-lg z-50 shadow-lg">
+                <div className="dropdown absolute top-12 min-w-[10rem] dark:bg-[rgb(29,35,74)] flex flex-col gap-2 p-4 left-1/2 -translate-x-2/4 rounded-lg z-50 shadow-[0_0_15px_0_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_0_rgba(0,0,0,0.3)] bg-white">
                   {invoiceListFilterOptions.map((filterOption) => (
                     <label
                       htmlFor={filterOption.name}
@@ -141,7 +141,7 @@ const InvoiceList = ({ invoices }: any) => {
                 </div>
               )}
             </div>
-            <button className="new-invoice-btn flex sitems-center bg-violet-500 px-4 py-2.5 rounded-full font-semibold hover:bg-[#9c71fd] transition-colors">
+            <button className="new-invoice-btn flex sitems-center bg-violet-500 px-4 py-2.5 rounded-full font-semibold hover:bg-[#9c71fd] transition-colors text-white ">
               <div className="plus-icon-container bg-white rounded-full w-6 h-6 flex items-center justify-center mr-2">
                 <Image src="/images/icon-plus.svg" width={11} height={11} />
               </div>
@@ -150,6 +150,7 @@ const InvoiceList = ({ invoices }: any) => {
             </button>
           </div>
         </div>
+        {/* Invoice List */}
         <div className="list flex flex-col gap-5 justify-center items-center mt-8 md:items-stretch">
           {filteredInvoices?.map((item: any) => (
             // Invoice preview
@@ -160,7 +161,7 @@ const InvoiceList = ({ invoices }: any) => {
               key={item.id}
             >
               <a className=" min-w-[18rem] w-full max-w-[30rem] mx-auto md:max-w-full md:w-full">
-                <article className="item bg-indigo-900 bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer grid grid-cols-2 items-end  md:flex md:items-center md:gap-6 md:py-5">
+                <article className="item dark:bg-indigo-900 bg-white shadow bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer grid grid-cols-2 items-end  md:flex md:items-center md:gap-6 md:py-5">
                   <p className="item-id font-bold inline-block md:order-1">
                     <span className="text-indigo-400">#</span>
                     {item.id}

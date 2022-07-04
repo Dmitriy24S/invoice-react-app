@@ -1,3 +1,4 @@
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -5,12 +6,15 @@ import React from "react";
 // import { ReactComponent as LightThemeIcon } from "../images/icon-sun.svg";
 
 const Header = ({ darkTheme, setDarkTheme }: any) => {
+  const { theme, setTheme } = useTheme();
   const toggleDarkTheme = () => {
     setDarkTheme((prevTheme: boolean) => !prevTheme);
+    setTheme(theme === "dark" ? "light" : "dark");
   };
+
   return (
     // bg-[#1e2139] - header bg?
-    <header className="bg-indigo-900 bg-opacity-40 w-full">
+    <header className="bg-white shadow dark:bg-indigo-900 bg-opacity-40 w-full">
       <div className="header-content max-w-5xl mx-auto flex justify-between">
         {/* Header logo - go to main page */}
         <Link href="/" passHref={true} scroll={false}>
@@ -45,7 +49,7 @@ const Header = ({ darkTheme, setDarkTheme }: any) => {
           {/* #494e6e - border bg? */}
           {/* Profile pic / button */}
           <button
-            className="avatar-container pl-4 pr-6 border-l border-[#716da8] h-full flex items-center justify-centercursor-pointer"
+            className="avatar-container pl-4 pr-6 border-l border-slate-300 dark:border-[#716da8] h-full flex items-center justify-centercursor-pointer"
             aria-label="open profile"
           >
             <Image

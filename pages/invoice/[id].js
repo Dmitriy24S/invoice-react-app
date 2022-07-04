@@ -29,9 +29,9 @@ const DraftStatus = ({ status }) => {
   return (
     // light theme #373b53
     // dark theme #dfe3fa
-    <div className="bg-[#dfe3fa] bg-opacity-10 rounded-lg w-[7rem] capitalize text-center">
-      <p className="px-2 py-2.5 text-[#dfe3fa] font-bold">
-        <span className="circle h-2.5 w-2.5 bg-[#dfe3fa] inline-block rounded-full mr-2"></span>
+    <div className="bg-[#373b53] dark:bg-[#dfe3fa] bg-opacity-10 dark:bg-opacity-10 rounded-lg w-[7rem] capitalize text-center">
+      <p className="px-2 py-2.5 text-[#373b53] dark:text-[#dfe3fa] font-bold">
+        <span className="circle h-2.5 w-2.5 bg-[#373b53] dark:bg-[#dfe3fa] inline-block rounded-full mr-2"></span>
         {status}
       </p>
     </div>
@@ -58,7 +58,7 @@ export default function Invoice({ invoices }) {
         <h2>Undefined</h2>
         {/* Back button */}
         <Link href="/" passHref={true} scroll={false}>
-          <a className="block w-fit group">
+          <a className="block w-fit group shadow-sm p-2 rounded">
             <span className="flex gap-2 items-center cursor-pointer">
               <img src="/images/icon-arrow-left.svg" alt="" />
               <span className="group-hover:opacity-80">Go Back</span>
@@ -73,7 +73,7 @@ export default function Invoice({ invoices }) {
     <main className="mt-8 px-4 max-w-3xl mx-auto">
       {/* Back button */}
       <Link href="/" passHref={true} scroll={false}>
-        <a className="block w-fit group">
+        <a className="block w-fit group shadow-sm p-2 rounded">
           <span className="flex gap-2 items-center cursor-pointer">
             <img src="/images/icon-arrow-left.svg" alt="" />
             <span className="group-hover:opacity-80">Go Back</span>
@@ -82,7 +82,7 @@ export default function Invoice({ invoices }) {
       </Link>
       {/* Invoice */}
       <section className="invoice min-w-[18rem] w-full mx-auto mt-6 flex flex-col gap-5 max-w-3xl">
-        <div className="payment-status-container flex items-center justify-between bg-indigo-900 bg-opacity-40 p-4  rounded-lg sm:p-6">
+        <div className="payment-status-container flex items-center justify-between bg-white shadow dark:bg-indigo-900 bg-opacity-40 p-4  rounded-lg sm:p-6">
           <h4>Status</h4>
           <div className="invoice-payment-status">
             {invoiceInfo?.status === "paid" ? (
@@ -94,7 +94,8 @@ export default function Invoice({ invoices }) {
             )}
           </div>
         </div>
-        <div className="invoice-info grid grid-cols-2 gap-4 sm:gap-8 flex-col bg-indigo-900 bg-opacity-40 p-5 sm:p-6 rounded-lg md:grid-cols-3">
+        {/* Invoice info */}
+        <div className="invoice-info grid grid-cols-2 gap-4 sm:gap-8 flex-col bg-white shadow-lg dark:bg-indigo-900 bg-opacity-40 p-5 sm:p-6 rounded-lg md:grid-cols-3">
           <div className="invoice-id col-span-2">
             <p className="font-bold">
               <span className="text-indigo-400">#</span>
@@ -132,7 +133,7 @@ export default function Invoice({ invoices }) {
             <p>Sent to</p>
             <p className="text-[#a6a9be]">{invoiceInfo?.clientEmail}</p>
           </div>
-          <div className="price-container mt-8 sm:mt-3 col-span-2 rounded-lg overflow-hidden shadow-[0_0_40px_0_rgba(0,0,0,0.3)] md:col-span-3">
+          <div className="price-container mt-8 sm:mt-3 col-span-2 rounded-lg overflow-hidden shadow-[0_0_15px_0_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_0_rgba(0,0,0,0.3)] md:col-span-3">
             <div className="invoice-items p-6 flex flex-col gap-4 text-sm sm:gap-6">
               <div className="div-invoice-items-header hidden sm:grid sm:grid-cols-5 mb-2 text-[#a6a9be]">
                 <p className="sm:col-span-2">Item Name</p>
@@ -158,7 +159,7 @@ export default function Invoice({ invoices }) {
                 </div>
               ))}
             </div>
-            <div className="invoice-total flex justify-between items-center bg-slate-900 p-6">
+            <div className="invoice-total flex justify-between items-center bg-violet-500 text-white dark:bg-slate-900 p-6">
               <p>Amount Due</p>
               <span className="font-bold text-2xl">$ {invoiceInfo?.total}</span>
             </div>
