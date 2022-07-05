@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import Form from "./Form";
 
 const PaidStatus = ({ status }: any) => {
   // html circle/dot: &#x2022;
@@ -43,6 +44,7 @@ const InvoiceList = ({ invoices }: any) => {
   const [selectedFilter, setSelectedFilter] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdown = useRef<HTMLDivElement>(null);
+  const [isFormOpen, setIsFormOpen] = useState(true);
 
   // close dropdown on click outside dropdown
   function handleClickOutside(e: any) {
@@ -57,6 +59,15 @@ const InvoiceList = ({ invoices }: any) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
+
+  // Disable main scroll when form is open
+  useEffect(() => {
+    if (isFormOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isFormOpen]);
 
   const [invoiceListFilterOptions, setInvoiceListFilterOptions] = useState([
     { id: 0, name: "all", checked: true },
@@ -95,7 +106,10 @@ const InvoiceList = ({ invoices }: any) => {
   }, [selectedFilter, invoices]);
 
   return (
-    <section className="mt-8 px-4">
+    <section className="mt-8 px-4 relative">
+      {isFormOpen && (
+        <Form title="Create Invoice" setIsFormOpen={setIsFormOpen} />
+      )}
       <div className="list max-w-3xl mx-auto">
         <div className="list-header-content max-w-5xl mx-auto flex justify-between">
           <div className="list-header-left">
@@ -141,7 +155,10 @@ const InvoiceList = ({ invoices }: any) => {
                 </div>
               )}
             </div>
-            <button className="new-invoice-btn flex sitems-center bg-violet-500 px-4 py-2.5 rounded-full font-semibold hover:bg-[#9c71fd] transition-colors text-white ">
+            <button
+              className="new-invoice-btn flex sitems-center bg-violet-500 px-4 py-2.5 rounded-full font-semibold hover:bg-[#9c71fd] transition-colors text-white"
+              onClick={() => setIsFormOpen(true)}
+            >
               <div className="plus-icon-container bg-white rounded-full w-6 h-6 flex items-center justify-center mr-2">
                 <Image src="/images/icon-plus.svg" width={11} height={11} />
               </div>

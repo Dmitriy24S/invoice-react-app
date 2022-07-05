@@ -36,3 +36,14 @@ a {
   color: rgb(43, 43, 43);
   background-color: hsl(0deg 0% 97%);
 }
+
+/* Form */
+.form-input {
+  @apply px-5 py-3 rounded-lg dark:bg-slate-800 bg-slate-200;
+}
+.form-label {
+  @apply mb-1.5;
+}
+.form-btn {
+  @apply px-4 py-2 rounded-full;
+}
