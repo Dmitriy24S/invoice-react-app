@@ -7,7 +7,7 @@ const Form = ({ title, setIsFormOpen }) => {
         className="backdrop z-10 inset-0 fixed bg-black bg-opacity-80"
         onClick={() => setIsFormOpen(false)}
       ></div>
-      <form className="form-container dark:bg-[#141624] bg-[#f7f7f7] shadow rounded-lg md:gap-6 md:py-5 inset-0 z-10 absolute max-w-3xl mx-auto h-[42rem] mt-8 w-full sm:w-11/12 flex flex-col justify-between">
+      <form className="form-container dark:bg-[#141624] bg-[#f7f7f7] shadow rounded-lg md:gap-6 md:py-5 inset-0 z-10 absolute max-w-2xl mx-auto h-[42rem] mt-8 w-full sm:w-11/12 flex flex-col justify-between">
         {/* Form */}
         <h2 className="text-2xl font-bold py-4 px-5">{title}</h2>
         <section className="form flex flex-col gap-16 h-[30rem] shadow-sm py-4 px-5 overscroll-none overflow-y-scroll">

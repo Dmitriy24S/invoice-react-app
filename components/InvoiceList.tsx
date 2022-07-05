@@ -44,7 +44,7 @@ const InvoiceList = ({ invoices }: any) => {
   const [selectedFilter, setSelectedFilter] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdown = useRef<HTMLDivElement>(null);
-  const [isFormOpen, setIsFormOpen] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   // close dropdown on click outside dropdown
   function handleClickOutside(e: any) {
