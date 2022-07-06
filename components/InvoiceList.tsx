@@ -39,7 +39,7 @@ const DraftStatus = ({ status }: any) => {
   );
 };
 
-const InvoiceList = ({ invoices, register, errors, handleSubmit }: any) => {
+const InvoiceList = ({ invoices }: any) => {
   const [filteredInvoices, setFilteredInvoices] = useState<any>(null);
   const [selectedFilter, setSelectedFilter] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -178,7 +178,7 @@ const InvoiceList = ({ invoices, register, errors, handleSubmit }: any) => {
               key={item.id}
             >
               <a className=" min-w-[18rem] w-full max-w-[30rem] mx-auto md:max-w-full md:w-full">
-                <article className="item dark:bg-indigo-900 bg-white shadow bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer grid grid-cols-2 items-end  md:flex md:items-center md:gap-6 md:py-5">
+                <article className="item dark:bg-indigo-900 bg-white shadow bg-opacity-40 p-4 px-5 rounded-lg cursor-pointer grid grid-cols-2 items-end  md:flex md:items-center md:gap-6 md:py-5 border border-transparent hover:border-violet-500 transition-colors ease-out duration-100">
                   <p className="item-id font-bold inline-block md:order-1">
                     <span className="text-indigo-400">#</span>
                     {item.id}
@@ -195,7 +195,7 @@ const InvoiceList = ({ invoices, register, errors, handleSubmit }: any) => {
                       minimumFractionDigits: 2,
                     })}
                   </p>
-                  <div className="item-payment-status ml-auto col-start-2 row-start-2 row-end-4 mt-2 md:order-5 md:mt-0 md:ml-0">
+                  <div className="item-payment-status ml-auto col-start-2 row-start-2 row-end-4 mt-2 md:order-5 md:mt-0 md:ml-0 flex gap-4">
                     {item.status === "paid" ? (
                       <PaidStatus status={item.status} />
                     ) : item.status === "pending" ? (
@@ -203,6 +203,13 @@ const InvoiceList = ({ invoices, register, errors, handleSubmit }: any) => {
                     ) : (
                       <DraftStatus status={item.status} />
                     )}
+                    <div className="arrow-right hidden order-6 sm:flex sm:items-center">
+                      <Image
+                        src="/images/icon-arrow-right.svg"
+                        width="7"
+                        height="10"
+                      />
+                    </div>
                   </div>
                 </article>
               </a>
