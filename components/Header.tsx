@@ -10,6 +10,7 @@ const Header = ({ darkTheme, setDarkTheme }: any) => {
   const toggleDarkTheme = () => {
     setDarkTheme((prevTheme: boolean) => !prevTheme);
     setTheme(theme === "dark" ? "light" : "dark");
+    // localStorage.setItem("theme", darkTheme ? "dark" : "light"); // ?
   };
 
   return (
