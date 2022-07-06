@@ -39,7 +39,7 @@ const DraftStatus = ({ status }: any) => {
   );
 };
 
-const InvoiceList = ({ invoices }: any) => {
+const InvoiceList = ({ invoices, register, errors, handleSubmit }: any) => {
   const [filteredInvoices, setFilteredInvoices] = useState<any>(null);
   const [selectedFilter, setSelectedFilter] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
