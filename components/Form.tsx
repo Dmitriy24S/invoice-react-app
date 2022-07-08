@@ -1,22 +1,28 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React from "react";
-import { useForm } from "react-hook-form";
+import Image from "next/image";
+import React, { useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import * as yup from "yup";
 
 interface FormTypes {
   senderStreet: string;
   senderCity: string;
-  senderPostcode: string;
+  senderPostCode: string;
   senderCountry: string;
-  clientFullname: string;
-  clientEmail: string;
   clientStreet: string;
   clientCity: string;
-  clientPostcode: string;
+  clientPostCode: string;
   clientCountry: string;
+  clientFullname: string;
+  clientEmail: string;
   invoiceDate: string;
   paymentTerms: string;
   projectDescription: string;
+  items: {
+    itemName: string;
+    itemQty: string;
+    itemPrice: string;
+  }[];
 }
 
 const formSchema = yup.object({
@@ -24,66 +30,65 @@ const formSchema = yup.object({
     .string()
     .trim()
     .min(4, "Street name must be at least 4 characters")
-    .max(14, "Street name must be at most 14 characters")
-    .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
+    .max(20, "Street name must be at most 20 characters")
+    // .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
     .required(),
   senderCity: yup
     .string()
     .trim()
     .min(4, "City name must be at least 4 characters")
-    .max(14, "City name must be at most 14 characters")
+    .max(20, "City name must be at most 20 characters")
     .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
     .required(),
-  senderPostcode: yup
+  senderPostCode: yup
     .string()
     .trim()
     .min(4, "Post code must be at least 4 characters")
-    .max(14, "Post code must be at most 14 characters")
+    .max(20, "Post code must be at most 20 characters")
     .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
     .required(),
   senderCountry: yup
     .string()
     .trim()
     .min(4, "Country name must be at least 4 characters")
-    .max(14, "Country name must be at most 14 characters")
+    .max(20, "Country name must be at most 20 characters")
     .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
     .required(),
-  clientFullname: yup
-    .string()
-    .trim()
-    .min(4, "Name must be at least 4 characters")
-    .max(12, "Name must be at most 12 characters")
-    .matches(/^[a-zA-Z0-9]+$/, "only letters and numbers")
-    .required(),
-  clientEmail: yup.string().email().required(),
   clientStreet: yup
     .string()
     .trim()
     .min(4, "Street name must be at least 4 characters")
-    .max(14, "Street name must be at most 14 characters")
-    .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
+    .max(20, "Street name must be at most 20 characters")
     .required(),
   clientCity: yup
     .string()
     .trim()
     .min(4, "City name must be at least 4 characters")
-    .max(14, "City name must be at most 14 characters")
+    .max(20, "City name must be at most 20 characters")
     .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
     .required(),
-  clientPostcode: yup
+  clientPostCode: yup
     .string()
     .trim()
     .min(4, "Post code must be at least 4 characters")
-    .max(14, "Post code must be at most 14 characters")
+    .max(20, "Post code must be at most 20 characters")
     .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
     .required(),
   clientCountry: yup
     .string()
     .trim()
     .min(4, "Country name must be at least 4 characters")
-    .max(14, "Country name must be at most 14 characters")
+    .max(20, "Country name must be at most 20 characters")
     .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
     .required(),
+  clientFullname: yup
+    .string()
+    .trim()
+    .min(4, "Name must be at least 4 characters")
+    .max(40, "Name must be at most 40 characters")
+    .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
+    .required(),
+  clientEmail: yup.string().email().required(),
   invoiceDate: yup.string().trim().required(),
   paymentTerms: yup
     .string()
@@ -94,16 +99,48 @@ const formSchema = yup.object({
     .trim()
     .min(4, "Project description must be at least 4 characters")
     .required("Project description terms is a required field"),
+  items: yup
+    .array()
+    .of(
+      yup.object().shape({
+        itemName: yup
+          .string()
+          .trim()
+          .min(4, "Item name must be at least 4 characters")
+          .max(20, "Item name must be at most 20 characters")
+          .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
+          .required(),
+        itemQty: yup
+          .number()
+          .typeError("Must be a number")
+          .min(1, "Quantity name must be at least 1")
+          .max(50, "Quantity name must be at most 14")
+          .required(),
+        itemPrice: yup
+          .number()
+          .typeError("Must be a number")
+          .min(100, "Price must be at least 100")
+          .max(999_999, "Price must be at most 999999")
+          .required(),
+      })
+      // .minLength(1, "Minimum 1 item") // no
+      // .required() // no
+    )
+    .min(1, "Cannot be empty") // ? works
+    .required(),
 });
 
 const Form = ({ title, setIsFormOpen }) => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormTypes>({
     resolver: yupResolver(formSchema),
   });
+
+  const { fields, append, remove } = useFieldArray({ name: "items", control });
 
   const formDropdownOptions = [
     { name: "Net 1 Day", value: 1 },
@@ -115,6 +152,8 @@ const Form = ({ title, setIsFormOpen }) => {
   const onSubmit = (data: any, e: any) => {
     console.log(data);
   };
+
+  // console.log(errors);
 
   return (
     <>
@@ -175,11 +214,11 @@ const Form = ({ title, setIsFormOpen }) => {
                 type="text"
                 id="sender-postcode"
                 className="form-input"
-                {...register("senderPostcode")}
+                {...register("senderPostCode")}
               />
-              {errors.senderPostcode && (
+              {errors.senderPostCode && (
                 <p className="form-message mb-5 mt-1">
-                  {errors.senderPostcode?.message}
+                  {errors.senderPostCode?.message}
                 </p>
               )}
             </div>
@@ -277,11 +316,11 @@ const Form = ({ title, setIsFormOpen }) => {
                 type="text"
                 id="client-postcode"
                 className="form-input"
-                {...register("clientPostcode")}
+                {...register("clientPostCode")}
               />
-              {errors.clientPostcode && (
+              {errors.clientPostCode && (
                 <p className="form-message mb-5 mt-1">
-                  {errors.clientPostcode?.message}
+                  {errors.clientPostCode?.message}
                 </p>
               )}
             </div>
@@ -361,24 +400,122 @@ const Form = ({ title, setIsFormOpen }) => {
               )}
             </div>
           </fieldset>
+          <div className="form-item-list-container">
+            <h4 className="mb-4 text-violet-500 font-semibold">Item List</h4>
+            {/* Item List */}
+            {fields?.map((item, index) => {
+              const fieldName = `items[${index}]`;
+              return (
+                <fieldset
+                  className="grid grid-cols-5 gap-4"
+                  name={fieldName}
+                  key={fieldName}
+                >
+                  <div className="input-wrapper flex flex-col col-span-5">
+                    <label htmlFor="item-name" className="form-label">
+                      Item Name
+                    </label>
+                    <input
+                      type="text"
+                      id="item-name"
+                      className="item-name form-input"
+                      {...register(`items.${index}.itemName`)}
+                      name={`items.${index}.itemName`}
+                    />
+                    {/* {errors.itemName && ( */}
+                    {errors.items?.[index]?.itemName && (
+                      <p className="form-message mb-5 mt-1">
+                        {errors.items?.[index]?.itemName?.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="input-wrapper flex flex-col col-span-1">
+                    <label htmlFor="item-qty" className="form-label">
+                      Qty.
+                    </label>
+                    <input
+                      type="text"
+                      id="item-qty"
+                      className="item-qty form-input"
+                      {...register(`items.${index}.itemQty`)}
+                      name={`items.${index}.itemQty`}
+                    />
+                    {errors.items?.[index]?.itemQty && (
+                      <p className="form-message mb-5 mt-1">
+                        {errors.items?.[index]?.itemQty?.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="input-wrapper flex flex-col col-span-2 mb-7">
+                    <label htmlFor="item-price" className="form-label">
+                      Price
+                    </label>
+                    <input
+                      type="text"
+                      id="item-price"
+                      className="item-price form-input"
+                      {...register(`items.${index}.itemPrice`)}
+                      name={`items.${index}.itemPrice`}
+                    />
+                    {errors.items?.[index]?.itemPrice && (
+                      <p className="form-message mb-5 mt-1">
+                        {errors.items?.[index]?.itemPrice?.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="item-total col-span-1 flex flex-col items-start justify-between h-[78px]">
+                    <div className="text-left">Total</div>
+                    <span className="px-1 py-3 text-left">0</span>
+                  </div>
+                  <div className="delete-btn-container flex flex-col items-center justify-between h-[78px]">
+                    <button
+                      type="button"
+                      className="col-span-1 h-[48px] mt-auto"
+                      aria-label="delete"
+                      onClick={() => remove(index)}
+                    >
+                      <Image
+                        src="/images/icon-delete.svg"
+                        width="13"
+                        height="16"
+                      />
+                    </button>
+                  </div>
+                </fieldset>
+              );
+            })}
+            {errors.items && (
+              <p className="form-message mb-1 mt-1">{errors.items?.message}</p>
+            )}
+          </div>
+          {/* Add new item button */}
+          <button
+            type="button"
+            className="form-btn bg-slate-600 hover:bg-slate-500 transition-colors text-white col-span-5 ease-out "
+            onClick={() => {
+              append({ itemName: "", itemQty: "", itemPrice: "" });
+            }}
+          >
+            + Add New Item
+          </button>
         </section>
         {/* Form buttons */}
         <section className="form-buttons flex gap-2 py-8 px-5 mt-auto">
           <button
             type="button"
-            className="form-btn bg-slate-500 hover:bg-slate-600 transition-colors text-white"
+            className="form-btn bg-slate-500 hover:bg-slate-600 transition-colors text-white ease-out"
             onClick={() => setIsFormOpen(false)}
           >
             Discard
           </button>
           <button
             type="button"
-            className="form-btn ml-auto bg-slate-500 hover:bg-slate-600 transition-colors text-white"
+            className="form-btn ml-auto bg-slate-500 hover:bg-slate-600 transition-colors text-white ease-out"
           >
             Save as Draft
           </button>
           <button
-            className="form-btn bg-violet-500 hover:bg-[#9c71fd] transition-colors text-white"
+            className="form-btn bg-violet-500 hover:bg-[#9c71fd] transition-colors text-white ease-out"
             type="submit"
           >
             Save & Send
