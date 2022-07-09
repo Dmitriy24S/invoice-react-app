@@ -1,8 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as yup from "yup";
+import { AppContext } from "../pages/_app";
 
 interface FormTypes {
   senderStreet: string;
@@ -19,9 +20,10 @@ interface FormTypes {
   paymentTerms: string;
   projectDescription: string;
   items: {
-    itemName: string;
-    itemQty: string;
-    itemPrice: string;
+    name: string;
+    quantity: string;
+    price: string;
+    total: number;
   }[];
 }
 
@@ -103,20 +105,20 @@ const formSchema = yup.object({
     .array()
     .of(
       yup.object().shape({
-        itemName: yup
+        name: yup
           .string()
           .trim()
           .min(4, "Item name must be at least 4 characters")
           .max(20, "Item name must be at most 20 characters")
           .matches(/^[a-zA-Z0-9 ]+$/, "only letters and numbers")
           .required(),
-        itemQty: yup
+        quantity: yup
           .number()
           .typeError("Must be a number")
           .min(1, "Quantity name must be at least 1")
           .max(50, "Quantity name must be at most 14")
           .required(),
-        itemPrice: yup
+        price: yup
           .number()
           .typeError("Must be a number")
           .min(100, "Price must be at least 100")
@@ -131,16 +133,21 @@ const formSchema = yup.object({
 });
 
 const Form = ({ title, setIsFormOpen }) => {
+  const { invoices, setInvoices } = useContext(AppContext) as any;
+
   const {
     register,
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormTypes>({
     resolver: yupResolver(formSchema),
   });
 
-  const { fields, append, remove } = useFieldArray({ name: "items", control });
+  const { fields, append, remove } = useFieldArray({ name: "items", control }); // ability to add/remove items to invoice form
+  const watchFields = watch("items"); // target specific field by their names - invoice item info
+  // console.log(watchFields); // track input changes to calc item * quantity and show total inside form
 
   const formDropdownOptions = [
     { name: "Net 1 Day", value: 1 },
@@ -149,8 +156,83 @@ const Form = ({ title, setIsFormOpen }) => {
     { name: "Net 30 Days", value: 30 },
   ];
 
-  const onSubmit = (data: any, e: any) => {
-    console.log(data);
+  // Handle submit new invoice
+  const onSubmit = (data: any, e: any, status = "pending") => {
+    // console.log(data);
+    // items: Array(1), projectDescription: 'sffsdfsdf', paymentTerms: '30', invoiceDate: '2022-07-17', clientEmail: 'text@gmail.com', …}
+    // clientCity: "text"
+    // clientCountry: "text"
+    // clientEmail: "text@gmail.com"
+    // clientFullname: "text"
+    // clientPostCode: "text"
+    // clientStreet: "text"
+    // invoiceDate: "2022-07-17"
+    // items: [{…}]
+    // paymentTerms: "30"
+    // projectDescription: "text"
+    // senderCity: "text"
+    // senderCountry: "text"
+    // senderPostCode: "text"
+    // senderStreet: "text"
+
+    // Invoice created at date:
+    let today: any = new Date();
+    let dd = String(today.getDate()).padStart(2, "0");
+    let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    let yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd; // "2022-07-08"
+
+    // add 'total:' property - calc item price * item quantity
+    const itemsWithUpdatedItemTotalPrice = data.items.map((item) => {
+      // console.log(item, "item");
+      // {price: 200, quantity: 1, name: 'text'}
+      // name: "text"
+      // price: 200
+      // quantity: 1
+      return {
+        ...item,
+        total: Number(item.quantity) * Number(item.price), // add 'total:' property - calc item price * item quantity
+      };
+    });
+
+    // add overall 'total:' property - calc totals of ALL items (for example: if there is more of them than 1 in items array)
+    const totalAllItemsPrice = itemsWithUpdatedItemTotalPrice.reduce(
+      (prev, curr) => {
+        return prev + curr.total;
+      },
+      0
+    );
+
+    setInvoices((prevInvoices) => {
+      return [
+        ...prevInvoices,
+        {
+          id: Math.floor(Math.random() * 99999) + "a",
+          createdAt: today,
+          paymentDue: data.invoiceDate,
+          description: data.projectDescription,
+          paymentTerms: data.paymentTerms,
+          clientName: data.clientFullname,
+          clientEmail: data.clientEmail,
+          status: status,
+          senderAddress: {
+            street: data.senderStreet,
+            city: data.senderCity,
+            postCode: data.senderPostoCode,
+            country: data.senderCountry,
+          },
+          clientAddress: {
+            street: data.clientStreet,
+            city: data.clientCity,
+            postCode: data.clientPostCode,
+            country: data.clientCountry,
+          },
+
+          items: itemsWithUpdatedItemTotalPrice,
+          total: totalAllItemsPrice,
+        },
+      ];
+    });
   };
 
   // console.log(errors);
@@ -163,7 +245,7 @@ const Form = ({ title, setIsFormOpen }) => {
       ></div>
       <form
         className="form-container dark:bg-[#141624] bg-[#f7f7f7] shadow rounded-lg md:gap-6 md:py-5 inset-0 z-10 absolute max-w-2xl mx-auto h-[42rem] mt-8 w-full sm:w-11/12 flex flex-col justify-between"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit((data, e) => onSubmit(data, e, "pending"))}
       >
         {/* Form */}
         <h2 className="text-2xl font-bold py-4 px-5">{title}</h2>
@@ -419,13 +501,13 @@ const Form = ({ title, setIsFormOpen }) => {
                       type="text"
                       id="item-name"
                       className="item-name form-input"
-                      {...register(`items.${index}.itemName`)}
-                      name={`items.${index}.itemName`}
+                      {...register(`items.${index}.name`)}
+                      name={`items.${index}.name`}
                     />
                     {/* {errors.itemName && ( */}
-                    {errors.items?.[index]?.itemName && (
+                    {errors.items?.[index]?.name && (
                       <p className="form-message mb-5 mt-1">
-                        {errors.items?.[index]?.itemName?.message}
+                        {errors.items?.[index]?.name?.message}
                       </p>
                     )}
                   </div>
@@ -437,12 +519,12 @@ const Form = ({ title, setIsFormOpen }) => {
                       type="text"
                       id="item-qty"
                       className="item-qty form-input"
-                      {...register(`items.${index}.itemQty`)}
-                      name={`items.${index}.itemQty`}
+                      {...register(`items.${index}.quantity`)}
+                      name={`items.${index}.quantity`}
                     />
-                    {errors.items?.[index]?.itemQty && (
+                    {errors.items?.[index]?.quantity && (
                       <p className="form-message mb-5 mt-1">
-                        {errors.items?.[index]?.itemQty?.message}
+                        {errors.items?.[index]?.quantity?.message}
                       </p>
                     )}
                   </div>
@@ -454,18 +536,21 @@ const Form = ({ title, setIsFormOpen }) => {
                       type="text"
                       id="item-price"
                       className="item-price form-input"
-                      {...register(`items.${index}.itemPrice`)}
-                      name={`items.${index}.itemPrice`}
+                      {...register(`items.${index}.price`)}
+                      name={`items.${index}.price`}
                     />
-                    {errors.items?.[index]?.itemPrice && (
+                    {errors.items?.[index]?.price && (
                       <p className="form-message mb-5 mt-1">
-                        {errors.items?.[index]?.itemPrice?.message}
+                        {errors.items?.[index]?.price?.message}
                       </p>
                     )}
                   </div>
                   <div className="item-total col-span-1 flex flex-col items-start justify-between h-[78px]">
                     <div className="text-left">Total</div>
-                    <span className="px-1 py-3 text-left">0</span>
+                    <span className="px-1 py-3 text-left">
+                      {Number(watchFields[index].price) *
+                        Number(watchFields[index].quantity)}
+                    </span>
                   </div>
                   <div className="delete-btn-container flex flex-col items-center justify-between h-[78px]">
                     <button
@@ -484,7 +569,8 @@ const Form = ({ title, setIsFormOpen }) => {
                 </fieldset>
               );
             })}
-            {errors.items && (
+            {/* Show warning/error if not added item to invoice: */}
+            {errors.items && errors.items?.message && (
               <p className="form-message mb-1 mt-1">{errors.items?.message}</p>
             )}
           </div>
@@ -493,7 +579,7 @@ const Form = ({ title, setIsFormOpen }) => {
             type="button"
             className="form-btn bg-slate-600 hover:bg-slate-500 transition-colors text-white col-span-5 ease-out "
             onClick={() => {
-              append({ itemName: "", itemQty: "", itemPrice: "" });
+              append({ name: "", quantity: "", price: "" });
             }}
           >
             + Add New Item

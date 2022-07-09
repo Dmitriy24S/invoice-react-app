@@ -1,8 +1,10 @@
 import { ThemeProvider } from "next-themes";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Header from "../components/Header.tsx";
 import data from "../data/data.json";
 import "../styles/globals.css";
+
+export const AppContext = createContext({});
 
 function MyApp({ Component, pageProps }) {
   const [darkTheme, setDarkTheme] = useState(true);
@@ -27,10 +29,12 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ThemeProvider attribute="class">
-      <div className="main-wrapper mb-10">
-        <Header darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
-        <Component {...pageProps} invoices={invoices} />
-      </div>
+      <AppContext.Provider value={{ invoices, setInvoices }}>
+        <div className="main-wrapper mb-10">
+          <Header darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
+          <Component {...pageProps} invoices={invoices} />
+        </div>
+      </AppContext.Provider>
     </ThemeProvider>
   );
 }

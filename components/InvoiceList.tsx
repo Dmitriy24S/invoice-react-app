@@ -25,7 +25,6 @@ const PendingStatus = ({ status }: any) => {
     </div>
   );
 };
-
 const DraftStatus = ({ status }: any) => {
   return (
     // light theme #373b53

@@ -39,7 +39,6 @@ a {
 
 /* Form */
 .form-input {
-  /* @apply px-5 py-3 rounded-lg dark:bg-slate-800 bg-slate-200 appearance-none h-full; */
   @apply px-5 py-3 rounded-lg dark:bg-slate-800 bg-slate-200 appearance-none;
 }
 .form-label {
@@ -48,7 +47,7 @@ a {
 .form-btn {
   @apply px-3 sm:px-4 py-2 rounded-full text-sm sm:text-base;
 }
-/* form error message */
+/* Form - error message */
 .form-message {
   color: #bf1650;
 }
