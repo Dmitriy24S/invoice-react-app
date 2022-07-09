@@ -233,6 +233,8 @@ const Form = ({ title, setIsFormOpen }) => {
         },
       ];
     });
+    // close new invoice form window
+    setIsFormOpen(false);
   };
 
   // console.log(errors);
@@ -597,6 +599,7 @@ const Form = ({ title, setIsFormOpen }) => {
           <button
             type="button"
             className="form-btn ml-auto bg-slate-500 hover:bg-slate-600 transition-colors text-white ease-out"
+            onClick={handleSubmit((data, e) => onSubmit(data, e, "draft"))}
           >
             Save as Draft
           </button>
