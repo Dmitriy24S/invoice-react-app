@@ -202,7 +202,7 @@ const InvoiceList = ({ invoices }: any) => {
                     ) : (
                       <DraftStatus status={item.status} />
                     )}
-                    <div className="arrow-right hidden order-6 sm:flex sm:items-center">
+                    <div className="arrow-right hidden order-6 md:flex md:items-center">
                       <Image
                         src="/images/icon-arrow-right.svg"
                         width="7"
