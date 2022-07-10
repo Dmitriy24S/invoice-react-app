@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { AppContext } from "../pages/_app";
@@ -132,14 +132,21 @@ const formSchema = yup.object({
     .required(),
 });
 
-const Form = ({ title, setIsFormOpen }) => {
+const Form = ({
+  title,
+  setIsFormOpen,
+  invoiceId = null,
+  invoiceInfo = "",
+}: any) => {
   const { invoices, setInvoices } = useContext(AppContext) as any;
+  // console.log(invoiceInfo);
 
   const {
     register,
     control,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<FormTypes>({
     resolver: yupResolver(formSchema),
@@ -148,6 +155,42 @@ const Form = ({ title, setIsFormOpen }) => {
   const { fields, append, remove } = useFieldArray({ name: "items", control }); // ability to add/remove items to invoice form
   const watchFields = watch("items"); // target specific field by their names - invoice item info
   // console.log(watchFields); // track input changes to calc item * quantity and show total inside form
+
+  useEffect(() => {
+    if (invoiceInfo) {
+      reset({
+        senderStreet: invoiceInfo.senderAddress.street,
+        senderCity: invoiceInfo.senderAddress.city,
+        senderPostCode: invoiceInfo.senderAddress.postCode,
+        senderCountry: invoiceInfo.senderAddress.country,
+        clientStreet: invoiceInfo.clientAddress.street,
+        clientCity: invoiceInfo.clientAddress.city,
+        clientPostCode: invoiceInfo.clientAddress.postCode,
+        clientCountry: invoiceInfo.clientAddress.country,
+        clientFullname: invoiceInfo.clientName,
+        clientEmail: invoiceInfo.clientEmail,
+        invoiceDate: invoiceInfo.paymentDue,
+        paymentTerms: invoiceInfo.paymentTerms,
+        projectDescription: invoiceInfo.description,
+        // items: Array(1)
+        // 0:
+        // name: "Brand Guidelines"
+        // price: 1800.9
+        // quantity: 1
+        // total: 1800.9
+      });
+      invoiceInfo.items.forEach((item) => {
+        return append(
+          {
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          },
+          { shouldFocus: false } // prevent focus on input item field on edit form open
+        );
+      });
+    }
+  }, [invoiceInfo]);
 
   const formDropdownOptions = [
     { name: "Net 1 Day", value: 1 },
@@ -203,36 +246,76 @@ const Form = ({ title, setIsFormOpen }) => {
       0
     );
 
-    setInvoices((prevInvoices) => {
-      return [
-        ...prevInvoices,
-        {
-          id: Math.floor(Math.random() * 99999) + "a",
-          createdAt: today,
-          paymentDue: data.invoiceDate,
-          description: data.projectDescription,
-          paymentTerms: data.paymentTerms,
-          clientName: data.clientFullname,
-          clientEmail: data.clientEmail,
-          status: status,
-          senderAddress: {
-            street: data.senderStreet,
-            city: data.senderCity,
-            postCode: data.senderPostoCode,
-            country: data.senderCountry,
-          },
-          clientAddress: {
-            street: data.clientStreet,
-            city: data.clientCity,
-            postCode: data.clientPostCode,
-            country: data.clientCountry,
-          },
+    // If invoice exist - update it with new data, else create new invoice and add it to the list:
+    // const findInvoice = invoices.find((invoice) => invoice.id === data.id);
 
-          items: itemsWithUpdatedItemTotalPrice,
-          total: totalAllItemsPrice,
-        },
-      ];
-    });
+    const findInvoice = invoices.find(
+      (invoice) => invoice.id === invoiceInfo.id
+    );
+    // If invoice exist - update it with new data
+    if (findInvoice) {
+      const updatedInvoices = invoices.map((item) => {
+        if (item.id === invoiceInfo.id) {
+          return {
+            ...item,
+            createdAt: today,
+            paymentDue: data.invoiceDate,
+            description: data.projectDescription,
+            paymentTerms: data.paymentTerms,
+            clientName: data.clientFullname,
+            clientEmail: data.clientEmail,
+            status: status,
+            senderAddress: {
+              street: data.senderStreet,
+              city: data.senderCity,
+              postCode: data.senderPostoCode,
+              country: data.senderCountry,
+            },
+            clientAddress: {
+              street: data.clientStreet,
+              city: data.clientCity,
+              postCode: data.clientPostCode,
+              country: data.clientCountry,
+            },
+            items: itemsWithUpdatedItemTotalPrice,
+            total: totalAllItemsPrice,
+          };
+        } else return item;
+      });
+      setInvoices(updatedInvoices);
+      // Else - create new invoice and add it to the list:
+    } else {
+      setInvoices((prevInvoices) => {
+        return [
+          ...prevInvoices,
+          {
+            id: Math.floor(Math.random() * 99999) + "a",
+            createdAt: today,
+            paymentDue: data.invoiceDate,
+            description: data.projectDescription,
+            paymentTerms: data.paymentTerms,
+            clientName: data.clientFullname,
+            clientEmail: data.clientEmail,
+            status: status,
+            senderAddress: {
+              street: data.senderStreet,
+              city: data.senderCity,
+              postCode: data.senderPostoCode,
+              country: data.senderCountry,
+            },
+            clientAddress: {
+              street: data.clientStreet,
+              city: data.clientCity,
+              postCode: data.clientPostCode,
+              country: data.clientCountry,
+            },
+            items: itemsWithUpdatedItemTotalPrice,
+            total: totalAllItemsPrice,
+          },
+        ];
+      });
+    }
+
     // close new invoice form window
     setIsFormOpen(false);
   };
@@ -250,7 +333,16 @@ const Form = ({ title, setIsFormOpen }) => {
         onSubmit={handleSubmit((data, e) => onSubmit(data, e, "pending"))}
       >
         {/* Form */}
-        <h2 className="text-2xl font-bold py-4 px-5">{title}</h2>
+        <h2 className="text-2xl font-bold py-4 px-5">
+          {title}{" "}
+          {invoiceId && (
+            <span>
+              <span className="text-violet-700">#</span>
+              <span className="text-slate-300">{invoiceId}</span>
+            </span>
+          )}
+        </h2>
+
         <section className="form flex flex-col gap-16 h-[30rem] shadow-sm py-4 px-5 overscroll-none overflow-y-scroll">
           {/* Bill from */}
           <fieldset className="form-bill-from-container grid grid-cols-2 gap-4">
@@ -266,7 +358,7 @@ const Form = ({ title, setIsFormOpen }) => {
                 id="sender-street"
                 className="form-input"
                 {...register("senderStreet")}
-                autoFocus
+                // autoFocus
               />
               {errors.senderStreet && (
                 <p className="form-message mb-5 mt-1">

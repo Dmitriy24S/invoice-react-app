@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import Form from "../../components/Form";
 
 const PaidStatus = ({ status }) => {
   // html circle/dot: &#x2022;
@@ -24,7 +25,6 @@ const PendingStatus = ({ status }) => {
     </div>
   );
 };
-
 const DraftStatus = ({ status }) => {
   return (
     // light theme #373b53
@@ -42,6 +42,7 @@ export default function Invoice({ invoices }) {
   const router = useRouter();
   const [invoiceId, setInvoiceId] = useState(null);
   const [invoiceInfo, setInvoiceInfo] = useState(null);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
 
   useEffect(() => {
     setInvoiceId(router.query.id);
@@ -50,6 +51,10 @@ export default function Invoice({ invoices }) {
 
   console.log(invoiceId);
   console.log(invoiceInfo);
+
+  useEffect(() => {
+    setInvoiceInfo(invoices.find((invoice) => invoice.id === invoiceId));
+  }, [isEditFormOpen]);
 
   // Undefined page fallback?
   if (invoiceId == null) {
@@ -81,10 +86,18 @@ export default function Invoice({ invoices }) {
         </a>
       </Link>
       {/* Invoice */}
-      <section className="invoice min-w-[18rem] w-full mx-auto mt-6 flex flex-col gap-5 max-w-3xl">
-        <div className="payment-status-container flex items-center justify-between bg-white shadow dark:bg-indigo-900 bg-opacity-40 p-4  rounded-lg sm:p-6">
+      <section className="invoice min-w-[18rem] w-full mx-auto mt-6 flex flex-col gap-5 max-w-3xl relative">
+        {isEditFormOpen && (
+          <Form
+            title={`Edit Invoice`}
+            setIsFormOpen={setIsEditFormOpen}
+            invoiceId={invoiceId}
+            invoiceInfo={invoiceInfo}
+          />
+        )}
+        <div className="payment-status-container flex items-center justify-between bg-white shadow dark:bg-indigo-900 bg-opacity-40 p-4 rounded-lg sm:p-6">
           <h4>Status</h4>
-          <div className="invoice-payment-status">
+          <div className="invoice-payment-status ml-4">
             {invoiceInfo?.status === "paid" ? (
               <PaidStatus status={invoiceInfo?.status} />
             ) : invoiceInfo?.status === "pending" ? (
@@ -93,6 +106,12 @@ export default function Invoice({ invoices }) {
               <DraftStatus status={invoiceInfo?.status} />
             )}
           </div>
+          <button
+            className="edit-invoice-btn ml-auto bg-violet-500 px-2 py-2.5 rounded-lg w-[7rem] capitalize text-center hover:bg-opacity-80 transition duration-150 ease-in-out"
+            onClick={() => setIsEditFormOpen(true)}
+          >
+            Edit
+          </button>
         </div>
         {/* Invoice info */}
         <div className="invoice-info grid grid-cols-2 gap-4 sm:gap-8 flex-col bg-white shadow-lg dark:bg-indigo-900 bg-opacity-40 p-5 sm:p-6 rounded-lg md:grid-cols-3">
