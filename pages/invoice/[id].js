@@ -95,9 +95,9 @@ export default function Invoice({ invoices }) {
             invoiceInfo={invoiceInfo}
           />
         )}
-        <div className="payment-status-container flex items-center justify-between bg-white shadow dark:bg-indigo-900 bg-opacity-40 p-4 rounded-lg sm:p-6">
+        <div className="payment-status-container grid grid-cols-2 gap-3 sm:flex items-center justify-between bg-white shadow dark:bg-indigo-900 bg-opacity-40 rounded-lg p-4 sm:p-6 ">
           <h4>Status</h4>
-          <div className="invoice-payment-status ml-4">
+          <div className="inline-block invoice-payment-status ml-auto sm:ml-4">
             {invoiceInfo?.status === "paid" ? (
               <PaidStatus status={invoiceInfo?.status} />
             ) : invoiceInfo?.status === "pending" ? (
@@ -106,12 +106,14 @@ export default function Invoice({ invoices }) {
               <DraftStatus status={invoiceInfo?.status} />
             )}
           </div>
-          <button
-            className="edit-invoice-btn ml-auto bg-violet-500 px-2 py-2.5 rounded-lg w-[7rem] capitalize text-center hover:bg-opacity-80 transition duration-150 ease-in-out"
-            onClick={() => setIsEditFormOpen(true)}
-          >
-            Edit
-          </button>
+          <div className="invoice-btn-container sm:ml-auto">
+            <button
+              className="edit-invoice-btn text-white bg-violet-500 px-2 py-2.5 rounded-lg w-[7rem] capitalize text-center hover:bg-opacity-80 transition duration-150 ease-in-out"
+              onClick={() => setIsEditFormOpen(true)}
+            >
+              Edit
+            </button>
+          </div>
         </div>
         {/* Invoice info */}
         <div className="invoice-info grid grid-cols-2 gap-4 sm:gap-8 flex-col bg-white shadow-lg dark:bg-indigo-900 bg-opacity-40 p-5 sm:p-6 rounded-lg md:grid-cols-3">
