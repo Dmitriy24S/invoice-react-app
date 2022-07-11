@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { AppContext } from "../pages/_app";
@@ -179,7 +179,7 @@ const Form = ({
         // quantity: 1
         // total: 1800.9
       });
-      invoiceInfo.items.forEach((item) => {
+      invoiceInfo.items.forEach((item: any) => {
         return append(
           {
             name: item.name,
@@ -226,7 +226,7 @@ const Form = ({
     today = yyyy + "-" + mm + "-" + dd; // "2022-07-08"
 
     // add 'total:' property - calc item price * item quantity
-    const itemsWithUpdatedItemTotalPrice = data.items.map((item) => {
+    const itemsWithUpdatedItemTotalPrice = data.items.map((item: any) => {
       // console.log(item, "item");
       // {price: 200, quantity: 1, name: 'text'}
       // name: "text"
@@ -240,7 +240,7 @@ const Form = ({
 
     // add overall 'total:' property - calc totals of ALL items (for example: if there is more of them than 1 in items array)
     const totalAllItemsPrice = itemsWithUpdatedItemTotalPrice.reduce(
-      (prev, curr) => {
+      (prev: any, curr: any) => {
         return prev + curr.total;
       },
       0
@@ -250,11 +250,11 @@ const Form = ({
     // const findInvoice = invoices.find((invoice) => invoice.id === data.id);
 
     const findInvoice = invoices.find(
-      (invoice) => invoice.id === invoiceInfo.id
+      (invoice: any) => invoice.id === invoiceInfo.id
     );
     // If invoice exist - update it with new data
     if (findInvoice) {
-      const updatedInvoices = invoices.map((item) => {
+      const updatedInvoices = invoices.map((item: any) => {
         if (item.id === invoiceInfo.id) {
           return {
             ...item,
@@ -285,7 +285,7 @@ const Form = ({
       setInvoices(updatedInvoices);
       // Else - create new invoice and add it to the list:
     } else {
-      setInvoices((prevInvoices) => {
+      setInvoices((prevInvoices: any) => {
         return [
           ...prevInvoices,
           {
