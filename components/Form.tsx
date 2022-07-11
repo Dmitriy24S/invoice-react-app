@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useLayoutEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { AppContext } from "../pages/_app";
@@ -322,6 +322,28 @@ const Form = ({
 
   // console.log(errors);
 
+  // Disable main scroll when form is open v1
+  useLayoutEffect((): any => {
+    // ? fix type error, add any?, return string?
+    document.body.style.overflow = "hidden";
+    return () => (document.body.style.overflow = "auto");
+  }, []);
+
+  // Disable main scroll when form is open v2
+  const useLockBodyScroll = () => {
+    useLayoutEffect((): any => {
+      // ? fix type error, add any?, return string?
+      // Get original body overflow
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      // Prevent scrolling on mount
+      document.body.style.overflow = "hidden";
+      // Re-enable scrolling when component unmounts
+      return () => (document.body.style.overflow = originalStyle);
+    }, []); // Empty array ensures effect is only run on mount and unmount
+  };
+  // Call hook to lock body scroll
+  // useLockBodyScroll();
+
   return (
     <>
       <div
@@ -329,7 +351,7 @@ const Form = ({
         onClick={() => setIsFormOpen(false)}
       ></div>
       <form
-        className="form-container dark:bg-[#141624] bg-[#f7f7f7] shadow rounded-lg md:gap-6 md:py-5 inset-0 z-10 absolute max-w-2xl mx-auto h-[42rem] mt-8 w-full sm:w-11/12 flex flex-col justify-between"
+        className="form-container dark:bg-[#141624] bg-[#f7f7f7] shadow rounded-lg md:gap-6 md:py-5 inset-0 z-10 max-w-2xl mx-auto w-full sm:w-11/12 flex flex-col justify-between fixed h-full md:h-[45rem] md:mt-8"
         onSubmit={handleSubmit((data, e) => onSubmit(data, e, "pending"))}
       >
         {/* Form */}

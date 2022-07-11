@@ -59,14 +59,14 @@ const InvoiceList = ({ invoices }: any) => {
     };
   }, [isDropdownOpen]);
 
-  // Disable main scroll when form is open
-  useEffect(() => {
-    if (isFormOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [isFormOpen]);
+  // Disable main scroll when form is open v0.1
+  // useEffect(() => {
+  //   if (isFormOpen) {
+  //     document.body.style.overflow = "hidden";
+  //   } else {
+  //     document.body.style.overflow = "auto";
+  //   }
+  // }, [isFormOpen]);
 
   const [invoiceListFilterOptions, setInvoiceListFilterOptions] = useState([
     { id: 0, name: "all", checked: true },

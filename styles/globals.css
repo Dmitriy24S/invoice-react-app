@@ -9,9 +9,16 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   /* scrollbar-gutter: stable; */
-  /* dark theme */
+
+  /* Dark theme (old) */
   /* color: white; */
   /* background-color: hsl(233, 30%, 11%); */
+
+  /* Disable rubber band osx scroll? */
+  -webkit-overflow-scrolling: touch;
+  /* overflow-x: hidden;  */
+  /* ? but disables exisitng scroll lock when open form /
+  ? safari ignores all overflow hidden when form open */
 }
 
 a {
