@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import Router, { useRouter } from "next/router";
+import { AppContext } from "pages/_app";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Form from "../../components/Form.tsx";
 
 const PaidStatus = ({ status }) => {
@@ -39,10 +40,17 @@ const DraftStatus = ({ status }) => {
 };
 
 export default function Invoice({ invoices }) {
+  // const { invoices, setInvoices } = useContext(AppContext);
+  const { setInvoices } = useContext(AppContext);
+
   const router = useRouter();
   const [invoiceId, setInvoiceId] = useState(null);
   const [invoiceInfo, setInvoiceInfo] = useState(null);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
+    useState(false);
+  // const modal = useRef < HTMLDivElement > null;
+  const modal = useRef(); // modal for confirm invoice deletion warning message window modal
 
   useEffect(() => {
     setInvoiceId(router.query.id);
@@ -52,9 +60,71 @@ export default function Invoice({ invoices }) {
   console.log(invoiceId);
   console.log(invoiceInfo);
 
+  // Update invoice info on close of edit form window
   useEffect(() => {
     setInvoiceInfo(invoices.find((invoice) => invoice.id === invoiceId));
   }, [isEditFormOpen]);
+
+  // Close confirm delete modal on click outside dropdown
+  function handleClickOutside(e) {
+    if (modal.current && !modal.current.contains(e.target)) {
+      setIsDeleteConfirmationModalOpen(false);
+    }
+  }
+  // Close confirm delete modal on click outside dropdown
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDeleteConfirmationModalOpen]);
+
+  // Delete invoice
+  const handleDeleteInvoice = () => {
+    const updatedInvoices = invoices.filter(
+      (invoice) => invoice.id !== invoiceInfo.id // find selected invoice to delete, filter array, remove it from list
+    );
+    setInvoices(updatedInvoices); // update invoice with list without the deleted invoice
+    Router.push("/"); // redirect back to the list
+    // setIsDeleteConfirmationModalOpen(false); // close modal // ? unnecessary?
+  };
+
+  // Trap focus in open delete confirmation modal
+  const trapFocusInModal = (e) => {
+    if (e.key !== "Tab") return;
+
+    const focusableModalElements = modal.current.querySelectorAll(
+      "a[href], button:not([disabled]), textarea, input, select"
+    );
+
+    const firstElement = focusableModalElements[0];
+    const lastElement =
+      focusableModalElements[focusableModalElements.length - 1];
+
+    // if going forward by pressing tab and lastElement is active shift focus to first focusable element
+    if (!e.shiftKey && document.activeElement === lastElement) {
+      firstElement.focus();
+      return e.preventDefault();
+    }
+    // if going backward by pressing tab and firstElement is active shift focus to last focusable element
+    if (e.shiftKey && document.activeElement === firstElement) {
+      lastElement.focus();
+      e.preventDefault();
+    }
+  };
+
+  // Listen for ESC key to close delete confirmation modal
+  useEffect(() => {
+    const closeCartDrawer = (e) => {
+      if (e.key === "Escape") {
+        setIsDeleteConfirmationModalOpen(false);
+      }
+    };
+    window.addEventListener("keydown", closeCartDrawer);
+    return () => {
+      window.removeEventListener("keydown", closeCartDrawer);
+    };
+  }, [isDeleteConfirmationModalOpen]);
 
   // Undefined page fallback?
   if (invoiceId == null) {
@@ -85,8 +155,9 @@ export default function Invoice({ invoices }) {
           </span>
         </a>
       </Link>
-      {/* Invoice */}
+      {/* Invoice container */}
       <section className="invoice min-w-[18rem] w-full mx-auto mt-6 flex flex-col gap-5 max-w-3xl relative">
+        {/* Edit invoice form window */}
         {isEditFormOpen && (
           <Form
             title={`Edit Invoice`}
@@ -95,6 +166,42 @@ export default function Invoice({ invoices }) {
             invoiceInfo={invoiceInfo}
           />
         )}
+        {/* Delete invoice modal confirmation window */}
+        {isDeleteConfirmationModalOpen && (
+          <>
+            <div
+              className="backdrop z-10 inset-0 fixed bg-black bg-opacity-60"
+              onClick={() => setIsFormOpen(false)}
+            ></div>
+            <section
+              ref={modal}
+              onKeyDown={trapFocusInModal}
+              className="absolute z-10 mx-auto left-0 right-0 dark:bg-[#181a2b] bg-[#f7f7f7] rounded-lg max-w-[26rem] flex flex-col gap-4 justify-evenly mt-8 p-8"
+            >
+              <h3 className="text-xl font-bold">Confirm Deletion</h3>
+              <p className="opacity-80">
+                Are you sure you want to delete this invoice?
+                <br />
+                This action cannot be undone.
+              </p>
+              <div className="modal-buttons-container flex gap-3 items-center justify-end mt-3">
+                <button
+                  className="text-white px-4 py-2.5 rounded-lg capitalize text-center bg-violet-800 hover:bg-violet-700 transition duration-150 ease-in-out"
+                  onClick={() => setIsDeleteConfirmationModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="text-white px-4 py-2.5 rounded-lg capitalize text-center bg-red-500 hover:bg-red-600 transition duration-150 ease-in-out"
+                  onClick={handleDeleteInvoice}
+                >
+                  Delete
+                </button>
+              </div>
+            </section>
+          </>
+        )}
+        {/* Invoice info */}
         <div className="payment-status-container grid grid-cols-2 gap-3 sm:flex items-center justify-between bg-white shadow dark:bg-indigo-900 bg-opacity-40 rounded-lg p-4 sm:p-6 ">
           <h4>Status</h4>
           <div className="inline-block invoice-payment-status ml-auto sm:ml-4">
@@ -106,12 +213,18 @@ export default function Invoice({ invoices }) {
               <DraftStatus status={invoiceInfo?.status} />
             )}
           </div>
-          <div className="invoice-btn-container sm:ml-auto">
+          <div className="invoice-btn-container flex gap-2 sm:ml-auto">
             <button
               className="edit-invoice-btn text-white bg-violet-500 px-2 py-2.5 rounded-lg w-[7rem] capitalize text-center hover:bg-opacity-80 transition duration-150 ease-in-out"
               onClick={() => setIsEditFormOpen(true)}
             >
               Edit
+            </button>
+            <button
+              className="edit-invoice-btn text-white bg-red-500 px-2 py-2.5 rounded-lg w-[7rem] capitalize text-center hover:bg-red-600 transition duration-150 ease-in-out"
+              onClick={() => setIsDeleteConfirmationModalOpen(true)}
+            >
+              Delete
             </button>
           </div>
         </div>
@@ -165,7 +278,7 @@ export default function Invoice({ invoices }) {
               {invoiceInfo?.items.map((item) => (
                 <div
                   key={item.name}
-                  className="invoice-item  flex justify-between items-center sm:grid sm:grid-cols-5"
+                  className="invoice-item flex justify-between items-center sm:grid sm:grid-cols-5"
                 >
                   <p className="item-name sm:col-span-2">{item.name}</p>
                   <p className="item-qty hidden sm:inline-block">
