@@ -264,7 +264,6 @@ const Form = ({
             paymentTerms: data.paymentTerms,
             clientName: data.clientFullname,
             clientEmail: data.clientEmail,
-            status: status,
             senderAddress: {
               street: data.senderStreet,
               city: data.senderCity,
