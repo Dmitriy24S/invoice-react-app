@@ -7,8 +7,10 @@ export interface AddressType {
 
 export interface InvoiceItemType {
   name: string;
-  price: number;
-  quantity: number;
+  //   price: number;
+  price: number | string; // ? type fix
+  //   quantity: number;
+  quantity: number | string; // ? type fix
   total: number;
 }
 

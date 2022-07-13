@@ -30,8 +30,10 @@ interface FormTypes {
   projectDescription: string;
   items: {
     name: string;
-    quantity: string;
-    price: string;
+    // quantity: string ;
+    quantity: string | number; // ? type fix
+    // price: string;
+    price: string | number; // ? type fix
     total: number;
   }[];
 }
@@ -194,7 +196,7 @@ const Form = ({
         // quantity: 1
         // total: 1800.9
       });
-      invoiceInfo.items.forEach((item: any) => {
+      invoiceInfo.items.forEach((item: InvoiceItemType) => {
         return append(
           {
             name: item.name,
@@ -216,6 +218,8 @@ const Form = ({
 
   // Handle submit new invoice
   const onSubmit = (data: any, e: any, status = "pending") => {
+    // const onSubmit = (data: InvoiceType, e: any, status = "pending") => {
+    // ? any type ?
     // console.log(data);
     // items: Array(1), projectDescription: 'sffsdfsdf', paymentTerms: '30', invoiceDate: '2022-07-17', clientEmail: 'text@gmail.com', …}
     // clientCity: "text"
@@ -265,6 +269,7 @@ const Form = ({
     const findInvoice = invoices.find((invoice: InvoiceType) => invoice.id === invoiceInfo?.id);
     // If invoice exist - update it with new data
     if (findInvoice) {
+      // const updatedInvoices: InvoiceType[] = invoices.map((item: InvoiceType) => {
       const updatedInvoices = invoices.map((item: InvoiceType) => {
         if (item.id === invoiceInfo?.id) {
           return {
@@ -278,7 +283,8 @@ const Form = ({
             senderAddress: {
               street: data.senderStreet,
               city: data.senderCity,
-              postCode: data.senderPostoCode,
+              // postCode: data.senderPostoCode, // typo mistake missed? no warning
+              postCode: data.senderPostCode,
               country: data.senderCountry,
             },
             clientAddress: {
@@ -289,7 +295,7 @@ const Form = ({
             },
             items: itemsWithUpdatedItemTotalPrice,
             total: totalAllItemsPrice,
-          };
+          } as InvoiceType;
         } else return item;
       });
       setInvoices(updatedInvoices);
