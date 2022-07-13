@@ -5,7 +5,12 @@ import React from "react";
 // import { ReactComponent as DarkThemeIcon } from "../images/icon-moon.svg";
 // import { ReactComponent as LightThemeIcon } from "../images/icon-sun.svg";
 
-const Header = ({ darkTheme, setDarkTheme }: any) => {
+interface HeaderPropsType {
+  darkTheme: boolean;
+  setDarkTheme: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Header = ({ darkTheme, setDarkTheme }: HeaderPropsType) => {
   const { theme, setTheme } = useTheme();
   const toggleDarkTheme = () => {
     setDarkTheme((prevTheme: boolean) => !prevTheme);
@@ -32,19 +37,9 @@ const Header = ({ darkTheme, setDarkTheme }: any) => {
           >
             {/* {darkTheme ? <DarkThemeIcon /> : <LightThemeIcon />} */}
             {darkTheme ? (
-              <Image
-                src="/images/icon-moon.svg"
-                alt="Dark theme icon"
-                width={20}
-                height={20}
-              />
+              <Image src="/images/icon-moon.svg" alt="Dark theme icon" width={20} height={20} />
             ) : (
-              <Image
-                src="/images/icon-sun.svg"
-                alt="Light theme icon"
-                width={20}
-                height={20}
-              />
+              <Image src="/images/icon-sun.svg" alt="Light theme icon" width={20} height={20} />
             )}
           </button>
           {/* #494e6e - border bg? */}
@@ -53,13 +48,7 @@ const Header = ({ darkTheme, setDarkTheme }: any) => {
             className="avatar-container pl-4 pr-6 border-l border-slate-300 dark:border-[#716da8] h-full flex items-center justify-centercursor-pointer"
             aria-label="open profile"
           >
-            <Image
-              src="/images/image-avatar.jpg"
-              alt="avatar"
-              width={32}
-              height={32}
-              className="rounded-full"
-            />
+            <Image src="/images/image-avatar.jpg" alt="avatar" width={32} height={32} className="rounded-full" />
           </button>
         </div>
       </div>

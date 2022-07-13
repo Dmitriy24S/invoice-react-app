@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
 import React, { useContext, useEffect, useLayoutEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { InvoiceItemType } from "types/types";
 import * as yup from "yup";
 import { AppContext } from "../pages/_app";
 
@@ -92,10 +93,7 @@ const formSchema = yup.object({
     .required(),
   clientEmail: yup.string().email().required(),
   invoiceDate: yup.string().trim().required(),
-  paymentTerms: yup
-    .string()
-    .trim()
-    .required("Payment terms is a required field"),
+  paymentTerms: yup.string().trim().required("Payment terms is a required field"),
   projectDescription: yup
     .string()
     .trim()
@@ -132,12 +130,7 @@ const formSchema = yup.object({
     .required(),
 });
 
-const Form = ({
-  title,
-  setIsFormOpen,
-  invoiceId = null,
-  invoiceInfo = "",
-}: any) => {
+const Form = ({ title, setIsFormOpen, invoiceId = null, invoiceInfo = "" }: any) => {
   const { invoices, setInvoices } = useContext(AppContext) as any;
   // console.log(invoiceInfo);
 
@@ -226,7 +219,7 @@ const Form = ({
     today = yyyy + "-" + mm + "-" + dd; // "2022-07-08"
 
     // add 'total:' property - calc item price * item quantity
-    const itemsWithUpdatedItemTotalPrice = data.items.map((item: any) => {
+    const itemsWithUpdatedItemTotalPrice = data.items.map((item: InvoiceItemType) => {
       // console.log(item, "item");
       // {price: 200, quantity: 1, name: 'text'}
       // name: "text"
@@ -239,19 +232,14 @@ const Form = ({
     });
 
     // add overall 'total:' property - calc totals of ALL items (for example: if there is more of them than 1 in items array)
-    const totalAllItemsPrice = itemsWithUpdatedItemTotalPrice.reduce(
-      (prev: any, curr: any) => {
-        return prev + curr.total;
-      },
-      0
-    );
+    const totalAllItemsPrice = itemsWithUpdatedItemTotalPrice.reduce((prev: any, curr: any) => {
+      return prev + curr.total;
+    }, 0);
 
     // If invoice exist - update it with new data, else create new invoice and add it to the list:
     // const findInvoice = invoices.find((invoice) => invoice.id === data.id);
 
-    const findInvoice = invoices.find(
-      (invoice: any) => invoice.id === invoiceInfo.id
-    );
+    const findInvoice = invoices.find((invoice: any) => invoice.id === invoiceInfo.id);
     // If invoice exist - update it with new data
     if (findInvoice) {
       const updatedInvoices = invoices.map((item: any) => {
@@ -367,9 +355,7 @@ const Form = ({
         <section className="form flex flex-col gap-16 h-[30rem] shadow-sm py-4 px-5 overscroll-none overflow-y-scroll">
           {/* Bill from */}
           <fieldset className="form-bill-from-container grid grid-cols-2 gap-4">
-            <legend className="mb-4 text-violet-500 font-semibold">
-              Bill From
-            </legend>
+            <legend className="mb-4 text-violet-500 font-semibold">Bill From</legend>
             <div className="input-wrapper flex flex-col col-span-2">
               <label htmlFor="sender-street" className="form-label">
                 Street Address
@@ -382,9 +368,7 @@ const Form = ({
                 // autoFocus
               />
               {errors.senderStreet && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.senderStreet?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.senderStreet?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col">
@@ -398,9 +382,7 @@ const Form = ({
                 {...register("senderCity")}
               />
               {errors.senderCity && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.senderCity?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.senderCity?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col">
@@ -414,9 +396,7 @@ const Form = ({
                 {...register("senderPostCode")}
               />
               {errors.senderPostCode && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.senderPostCode?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.senderPostCode?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col col-span-2">
@@ -430,20 +410,17 @@ const Form = ({
                 {...register("senderCountry")}
               />
               {errors.senderCountry && (
-                <p className="form-message mt-1">
-                  {errors.senderCountry?.message}
-                </p>
+                <p className="form-message mt-1">{errors.senderCountry?.message}</p>
               )}
             </div>
           </fieldset>
           {/* Bill to */}
           <fieldset className="form-bill-to-container grid grid-cols-2 gap-4">
-            <legend className="mb-4 text-violet-500 font-semibold">
-              Bill To
-            </legend>
+            <legend className="mb-4 text-violet-500 font-semibold">Bill To</legend>
             <div className="input-wrapper flex flex-col col-span-2">
               <label htmlFor="client-fullname" className="form-label">
-                Client's Name
+                {/* Client's Name */}
+                Client&apos;s Name
               </label>
               <input
                 type="text"
@@ -452,14 +429,13 @@ const Form = ({
                 {...register("clientFullname")}
               />
               {errors.clientFullname && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.clientFullname?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.clientFullname?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col col-span-2">
               <label htmlFor="client-email" className="form-label">
-                Client's Email
+                {/* Client's Email */}
+                Client&apos;s Email
               </label>
               <input
                 type="text"
@@ -468,9 +444,7 @@ const Form = ({
                 {...register("clientEmail")}
               />
               {errors.clientEmail && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.clientEmail?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.clientEmail?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col col-span-2">
@@ -484,9 +458,7 @@ const Form = ({
                 {...register("clientStreet")}
               />
               {errors.clientStreet && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.clientStreet?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.clientStreet?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col">
@@ -500,9 +472,7 @@ const Form = ({
                 {...register("clientCity")}
               />
               {errors.clientCity && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.clientCity?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.clientCity?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col">
@@ -516,9 +486,7 @@ const Form = ({
                 {...register("clientPostCode")}
               />
               {errors.clientPostCode && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.clientPostCode?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.clientPostCode?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col col-span-2">
@@ -532,9 +500,7 @@ const Form = ({
                 {...register("clientCountry")}
               />
               {errors.clientCountry && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.clientCountry?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.clientCountry?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col">
@@ -548,9 +514,7 @@ const Form = ({
                 {...register("invoiceDate")}
               />
               {errors.invoiceDate && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.invoiceDate?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.invoiceDate?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col">
@@ -575,9 +539,7 @@ const Form = ({
                 })}
               </select>
               {errors.paymentTerms && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.paymentTerms?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.paymentTerms?.message}</p>
               )}
             </div>
             <div className="input-wrapper flex flex-col col-span-2">
@@ -591,9 +553,7 @@ const Form = ({
                 {...register("projectDescription")}
               />
               {errors.projectDescription && (
-                <p className="form-message mb-5 mt-1">
-                  {errors.projectDescription?.message}
-                </p>
+                <p className="form-message mb-5 mt-1">{errors.projectDescription?.message}</p>
               )}
             </div>
           </fieldset>
@@ -603,11 +563,7 @@ const Form = ({
             {fields?.map((item, index) => {
               const fieldName = `items[${index}]`;
               return (
-                <fieldset
-                  className="grid grid-cols-5 gap-4"
-                  name={fieldName}
-                  key={fieldName}
-                >
+                <fieldset className="grid grid-cols-5 gap-4" name={fieldName} key={fieldName}>
                   <div className="input-wrapper flex flex-col col-span-5">
                     <label htmlFor="item-name" className="form-label">
                       Item Name
@@ -663,8 +619,7 @@ const Form = ({
                   <div className="item-total col-span-1 flex flex-col items-start justify-between h-[78px]">
                     <div className="text-left">Total</div>
                     <span className="px-1 py-3 text-left">
-                      {Number(watchFields[index].price) *
-                        Number(watchFields[index].quantity)}
+                      {Number(watchFields[index].price) * Number(watchFields[index].quantity)}
                     </span>
                   </div>
                   <div className="delete-btn-container flex flex-col items-center justify-between h-[78px]">
@@ -674,11 +629,7 @@ const Form = ({
                       aria-label="delete"
                       onClick={() => remove(index)}
                     >
-                      <Image
-                        src="/images/icon-delete.svg"
-                        width="13"
-                        height="16"
-                      />
+                      <Image src="/images/icon-delete.svg" width="13" height="16" alt="" />
                     </button>
                   </div>
                 </fieldset>

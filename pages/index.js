@@ -3,7 +3,7 @@ import Image from "next/image";
 import InvoiceList from "../components/InvoiceList.tsx";
 // import styles from "../styles/Home.module.css";
 
-export default function Home({ invoices }) {
+export default function Home() {
   return (
     <>
       <Head>
@@ -15,7 +15,7 @@ export default function Home({ invoices }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <InvoiceList invoices={invoices} />
+        <InvoiceList />
       </main>
     </>
   );
