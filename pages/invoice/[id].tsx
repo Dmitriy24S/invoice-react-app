@@ -3,7 +3,7 @@ import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import { AppContext } from "pages/_app";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import Form from "../../components/Form";
+import Form, { calcTotal } from "../../components/Form";
 import InvoiceStatus from "../../components/InvoiceStatus";
 import { AppContextType, InvoiceType } from "../../types/types";
 
@@ -247,7 +247,11 @@ export default function Invoice({ setIsFormOpen }: InvoicePropsType) {
                   <p className="item-name sm:col-span-2">{item.name}</p>
                   <p className="item-qty hidden sm:inline-block">{item.quantity}</p>
                   <p className="item-price hidden sm:inline-block">$ {item.price}</p>
-                  <p className="item-total sm:ml-auto">$ {item.price * item.quantity}</p>
+                  <p className="item-total sm:ml-auto">
+                    $ {calcTotal(item)}
+                    {/* Calculate total with 2 trailing zeroes */}
+                    {/* item.price * item.quantity */}
+                  </p>
                 </div>
               ))}
             </div>

@@ -2,9 +2,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
 import React, { useContext, useEffect, useLayoutEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { InvoiceItemType } from "types/types";
+import { AppContextType, InvoiceItemType, InvoiceType } from "types/types";
 import * as yup from "yup";
 import { AppContext } from "../pages/_app";
+
+// Calculate total with 2 trailing zeroes
+// const calcTotal = (item: InvoiceItemType) => {
+export const calcTotal = (item: any) => {
+  // ? any type ? watchFields[index] string / number type
+  return Number((Number(item.quantity) * Number(item.price)).toFixed(2));
+};
 
 interface FormTypes {
   senderStreet: string;
@@ -18,7 +25,8 @@ interface FormTypes {
   clientFullname: string;
   clientEmail: string;
   invoiceDate: string;
-  paymentTerms: string;
+  // paymentTerms: string;
+  paymentTerms: number;
   projectDescription: string;
   items: {
     name: string;
@@ -130,8 +138,22 @@ const formSchema = yup.object({
     .required(),
 });
 
-const Form = ({ title, setIsFormOpen, invoiceId = null, invoiceInfo = "" }: any) => {
-  const { invoices, setInvoices } = useContext(AppContext) as any;
+interface FormPropsType {
+  title: string;
+  setIsFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  // New invoice form / Edit exisiting invoice = fill form with:
+  invoiceId?: string | string[] | null;
+  invoiceInfo?: InvoiceType | undefined;
+}
+
+const Form = ({
+  title,
+  setIsFormOpen,
+  invoiceId = null,
+  invoiceInfo = undefined,
+}: FormPropsType) => {
+  // ? any type ?
+  const { invoices, setInvoices } = useContext(AppContext) as AppContextType;
   // console.log(invoiceInfo);
 
   const {
@@ -212,13 +234,14 @@ const Form = ({ title, setIsFormOpen, invoiceId = null, invoiceInfo = "" }: any)
     // senderStreet: "text"
 
     // Invoice created at date:
-    let today: any = new Date();
+    // let today: Date | string = new Date(); // ? any type ?
+    let today: any = new Date(); // ? any type ?
     let dd = String(today.getDate()).padStart(2, "0");
     let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
     let yyyy = today.getFullYear();
     today = yyyy + "-" + mm + "-" + dd; // "2022-07-08"
 
-    // add 'total:' property - calc item price * item quantity
+    // Add 'total:' property - calc item price * item quantity
     const itemsWithUpdatedItemTotalPrice = data.items.map((item: InvoiceItemType) => {
       // console.log(item, "item");
       // {price: 200, quantity: 1, name: 'text'}
@@ -227,23 +250,23 @@ const Form = ({ title, setIsFormOpen, invoiceId = null, invoiceInfo = "" }: any)
       // quantity: 1
       return {
         ...item,
-        total: Number(item.quantity) * Number(item.price), // add 'total:' property - calc item price * item quantity
+        total: calcTotal(item), // add 'total:' property - calc item price * item quantity
       };
     });
 
-    // add overall 'total:' property - calc totals of ALL items (for example: if there is more of them than 1 in items array)
+    // Add overall 'total:' property - calc totals of ALL items (for example: if there is more of them than 1 in items array)
     const totalAllItemsPrice = itemsWithUpdatedItemTotalPrice.reduce((prev: any, curr: any) => {
+      // ? any type ?
       return prev + curr.total;
     }, 0);
 
     // If invoice exist - update it with new data, else create new invoice and add it to the list:
     // const findInvoice = invoices.find((invoice) => invoice.id === data.id);
-
-    const findInvoice = invoices.find((invoice: any) => invoice.id === invoiceInfo.id);
+    const findInvoice = invoices.find((invoice: InvoiceType) => invoice.id === invoiceInfo?.id);
     // If invoice exist - update it with new data
     if (findInvoice) {
-      const updatedInvoices = invoices.map((item: any) => {
-        if (item.id === invoiceInfo.id) {
+      const updatedInvoices = invoices.map((item: InvoiceType) => {
+        if (item.id === invoiceInfo?.id) {
           return {
             ...item,
             createdAt: today,
@@ -619,7 +642,8 @@ const Form = ({ title, setIsFormOpen, invoiceId = null, invoiceInfo = "" }: any)
                   <div className="item-total col-span-1 flex flex-col items-start justify-between h-[78px]">
                     <div className="text-left">Total</div>
                     <span className="px-1 py-3 text-left">
-                      {Number(watchFields[index].price) * Number(watchFields[index].quantity)}
+                      {/* {Number(watchFields[index].price) * Number(watchFields[index].quantity)} */}
+                      {calcTotal(watchFields[index])}
                     </span>
                   </div>
                   <div className="delete-btn-container flex flex-col items-center justify-between h-[78px]">
