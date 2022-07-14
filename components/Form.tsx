@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
 import React, { useContext, useEffect, useLayoutEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { AppContextType, InvoiceItemType, InvoiceType } from "types/types";
+import { AppContextType, FormDataType, InvoiceItemType, InvoiceType } from "types/types";
 import * as yup from "yup";
 import { AppContext } from "../pages/_app";
 
@@ -180,10 +180,10 @@ const Form = ({
         senderCity: invoiceInfo.senderAddress.city,
         senderPostCode: invoiceInfo.senderAddress.postCode,
         senderCountry: invoiceInfo.senderAddress.country,
-        clientStreet: invoiceInfo.clientAddress.street,
-        clientCity: invoiceInfo.clientAddress.city,
-        clientPostCode: invoiceInfo.clientAddress.postCode,
-        clientCountry: invoiceInfo.clientAddress.country,
+        clientStreet: invoiceInfo?.clientAddress?.street,
+        clientCity: invoiceInfo?.clientAddress?.city,
+        clientPostCode: invoiceInfo?.clientAddress?.postCode,
+        clientCountry: invoiceInfo?.clientAddress?.country,
         clientFullname: invoiceInfo.clientName,
         clientEmail: invoiceInfo.clientEmail,
         invoiceDate: invoiceInfo.paymentDue,
@@ -217,8 +217,9 @@ const Form = ({
   ];
 
   // Handle submit new invoice
-  const onSubmit = (data: any, e: any, status = "pending") => {
-    // const onSubmit = (data: InvoiceType, e: any, status = "pending") => {
+  // const onSubmit = (data: any, e: any, status = "pending") => {
+  // const onSubmit = (data: InvoiceType, e: any, status = "pending") => {
+  const onSubmit = (data: FormDataType, e: any, status = "pending") => {
     // ? any type ?
     // console.log(data);
     // items: Array(1), projectDescription: 'sffsdfsdf', paymentTerms: '30', invoiceDate: '2022-07-17', clientEmail: 'text@gmail.com', …}
@@ -283,7 +284,7 @@ const Form = ({
             senderAddress: {
               street: data.senderStreet,
               city: data.senderCity,
-              // postCode: data.senderPostoCode, // typo mistake missed? no warning
+              // postCode: data.senderPostoCode, // typo mistake missed? no warning, Fixed: add types FormDataType = now shows warning when typo
               postCode: data.senderPostCode,
               country: data.senderCountry,
             },
@@ -295,13 +296,13 @@ const Form = ({
             },
             items: itemsWithUpdatedItemTotalPrice,
             total: totalAllItemsPrice,
-          } as InvoiceType;
+          };
         } else return item;
       });
       setInvoices(updatedInvoices);
       // Else - create new invoice and add it to the list:
     } else {
-      setInvoices((prevInvoices: any) => {
+      setInvoices((prevInvoices) => {
         return [
           ...prevInvoices,
           {
@@ -316,7 +317,8 @@ const Form = ({
             senderAddress: {
               street: data.senderStreet,
               city: data.senderCity,
-              postCode: data.senderPostoCode,
+              // postCode: data.senderPostoCode, // error typo no warning, fixed: now shows when typo mistake
+              postCode: data.senderPostCode,
               country: data.senderCountry,
             },
             clientAddress: {

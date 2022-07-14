@@ -221,10 +221,10 @@ export default function Invoice({ setIsFormOpen }: InvoicePropsType) {
             <p className="text-[#a6a9be]">Bill to</p>
             <p>{invoiceInfo?.clientName}</p>
             <address className="client-address not-italic text-[#a6a9be] mt-4">
-              <p> {invoiceInfo?.clientAddress.street} </p>
-              <p> {invoiceInfo?.clientAddress.city} </p>
-              <p> {invoiceInfo?.clientAddress.postCode} </p>
-              <p> {invoiceInfo?.clientAddress.country} </p>
+              <p> {invoiceInfo?.clientAddress?.street} </p>
+              <p> {invoiceInfo?.clientAddress?.city} </p>
+              <p> {invoiceInfo?.clientAddress?.postCode} </p>
+              <p> {invoiceInfo?.clientAddress?.country} </p>
             </address>
           </div>
           <div className="client-email col-span-2 md:col-span-1">

@@ -15,7 +15,7 @@ export interface InvoiceItemType {
 }
 
 export interface InvoiceType {
-  clientAddress: AddressType;
+  clientAddress?: AddressType;
   clientEmail: string;
   clientName: string;
   id: string;
@@ -27,6 +27,25 @@ export interface InvoiceType {
   senderAddress: AddressType;
   status: string;
   total: number;
+}
+
+// interface FormDataType extends InvoiceType {
+export interface FormDataType {
+  clientCity: string;
+  clientCountry: string;
+  clientEmail: string;
+  clientFullname: string;
+  clientPostCode: string;
+  clientStreet: string;
+  invoiceDate: string;
+  items: InvoiceItemType[];
+  // paymentTerms: string;
+  paymentTerms: number;
+  projectDescription: string;
+  senderCity: string;
+  senderCountry: string;
+  senderPostCode: string;
+  senderStreet: string;
 }
 
 export interface AppContextType {
