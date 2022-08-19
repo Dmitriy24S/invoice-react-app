@@ -219,7 +219,7 @@ const Form = ({
   // Handle submit new invoice
   // const onSubmit = (data: any, e: any, status = "pending") => {
   // const onSubmit = (data: InvoiceType, e: any, status = "pending") => {
-  const onSubmit = (data: FormDataType, e: any, status = "pending") => {
+  const onSubmit = (data: FormDataType, status = "pending") => {
     // ? any type ?
     // console.log(data);
     // items: Array(1), projectDescription: 'sffsdfsdf', paymentTerms: '30', invoiceDate: '2022-07-17', clientEmail: 'text@gmail.com', …}
@@ -370,7 +370,7 @@ const Form = ({
       ></div>
       <form
         className="form-container dark:bg-[#141624] bg-[#f7f7f7] shadow rounded-lg md:gap-6 md:py-5 inset-0 z-10 max-w-2xl mx-auto w-full sm:w-11/12 flex flex-col justify-between fixed h-full md:h-[45rem] md:mt-8"
-        onSubmit={handleSubmit((data, e) => onSubmit(data, e, "pending"))}
+        onSubmit={handleSubmit((data) => onSubmit(data, "pending"))}
       >
         {/* Form */}
         <h2 className="text-2xl font-bold py-4 px-5">
@@ -695,7 +695,7 @@ const Form = ({
           <button
             type="button"
             className="form-btn ml-auto bg-slate-500 hover:bg-slate-600 transition-colors text-white ease-out"
-            onClick={handleSubmit((data, e) => onSubmit(data, e, "draft"))}
+            onClick={handleSubmit((data) => onSubmit(data, "draft"))}
           >
             Save as Draft
           </button>
