@@ -348,17 +348,17 @@ const Form = ({
   }, []);
 
   // Disable main scroll when form is open v2
-  const useLockBodyScroll = () => {
-    useLayoutEffect((): any => {
-      // ? fix type error, add any?, return string?
-      // Get original body overflow
-      const originalStyle = window.getComputedStyle(document.body).overflow;
-      // Prevent scrolling on mount
-      document.body.style.overflow = "hidden";
-      // Re-enable scrolling when component unmounts
-      return () => (document.body.style.overflow = originalStyle);
-    }, []); // Empty array ensures effect is only run on mount and unmount
-  };
+  // const useLockBodyScroll = () => {
+  //   useLayoutEffect((): any => {
+  //     // ? fix type error, add any?, return string?
+  //     // Get original body overflow
+  //     const originalStyle = window.getComputedStyle(document.body).overflow;
+  //     // Prevent scrolling on mount
+  //     document.body.style.overflow = "hidden";
+  //     // Re-enable scrolling when component unmounts
+  //     return () => (document.body.style.overflow = originalStyle);
+  //   }, []); // Empty array ensures effect is only run on mount and unmount
+  // };
   // Call hook to lock body scroll
   // useLockBodyScroll();
 
@@ -591,7 +591,7 @@ const Form = ({
           <div className="form-item-list-container">
             <h4 className="mb-4 text-violet-500 font-semibold">Item List</h4>
             {/* Item List */}
-            {fields?.map((item, index) => {
+            {fields?.map((_item, index) => {
               const fieldName = `items[${index}]`;
               return (
                 <fieldset className="grid grid-cols-5 gap-4" name={fieldName} key={fieldName}>
