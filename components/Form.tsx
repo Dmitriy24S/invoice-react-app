@@ -166,6 +166,11 @@ const Form = ({
     reset,
     formState: { errors },
   } = useForm<FormTypes>({
+    defaultValues: {
+      // items: [{ name: "default Value" }]
+      items: [{ name: "", quantity: 1, price: "" }],
+      // show one default empty field for items
+    },
     resolver: yupResolver(formSchema),
   });
 
